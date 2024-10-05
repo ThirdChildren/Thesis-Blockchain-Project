@@ -8,27 +8,100 @@ dotenv.config();
 const ganacheUrl = process.env.GANACHE_URL || "http://172.20.208.1:7545/"; // URL del nodo Ganache
 const web3 = new Web3(new Web3.providers.HttpProvider(ganacheUrl));
 
-// Estrai gli indirizzi e le chiavi private dai vari account di Ganache
-const tsoAdminAccount = process.env.TSO_ADMIN_ACCOUNT;
-const account1 = process.env.ACCOUNT_1_ADDRESS;
-const account2 = process.env.ACCOUNT_2_ADDRESS;
-const account3 = process.env.ACCOUNT_3_ADDRESS;
-const account4 = process.env.ACCOUNT_4_ADDRESS;
-const account5 = process.env.ACCOUNT_5_ADDRESS;
-const privateKeyTsoAdmin = process.env.TSO_ADMIN_PRIVATE_KEY;
-const privateKey1 = process.env.ACCOUNT_1_PRIVATE_KEY;
-const privateKey2 = process.env.ACCOUNT_2_PRIVATE_KEY;
-const privateKey3 = process.env.ACCOUNT_3_PRIVATE_KEY;
-const privateKey4 = process.env.ACCOUNT_4_PRIVATE_KEY;
-const privateKey5 = process.env.ACCOUNT_5_PRIVATE_KEY;
+// Account e chiavi private da Ganache
+const accountsData = [
+  {
+    account: process.env.TSO_ADMIN_ACCOUNT,
+    privateKey: process.env.TSO_ADMIN_PRIVATE_KEY,
+  },
+  {
+    account: process.env.ACCOUNT_1_ADDRESS,
+    privateKey: process.env.ACCOUNT_1_PRIVATE_KEY,
+  },
+  {
+    account: process.env.ACCOUNT_2_ADDRESS,
+    privateKey: process.env.ACCOUNT_2_PRIVATE_KEY,
+  },
+  {
+    account: process.env.ACCOUNT_3_ADDRESS,
+    privateKey: process.env.ACCOUNT_3_PRIVATE_KEY,
+  },
+  {
+    account: process.env.ACCOUNT_4_ADDRESS,
+    privateKey: process.env.ACCOUNT_4_PRIVATE_KEY,
+  },
+  {
+    account: process.env.ACCOUNT_5_ADDRESS,
+    privateKey: process.env.ACCOUNT_5_PRIVATE_KEY,
+  },
+  {
+    account: process.env.ACCOUNT_6_ADDRESS,
+    privateKey: process.env.ACCOUNT_6_PRIVATE_KEY,
+  },
+  {
+    account: process.env.ACCOUNT_7_ADDRESS,
+    privateKey: process.env.ACCOUNT_7_PRIVATE_KEY,
+  },
+  {
+    account: process.env.ACCOUNT_8_ADDRESS,
+    privateKey: process.env.ACCOUNT_8_PRIVATE_KEY,
+  },
+  {
+    account: process.env.ACCOUNT_9_ADDRESS,
+    privateKey: process.env.ACCOUNT_9_PRIVATE_KEY,
+  },
+  {
+    account: process.env.ACCOUNT_10_ADDRESS,
+    privateKey: process.env.ACCOUNT_10_PRIVATE_KEY,
+  },
+  {
+    account: process.env.ACCOUNT_11_ADDRESS,
+    privateKey: process.env.ACCOUNT_11_PRIVATE_KEY,
+  },
+  {
+    account: process.env.ACCOUNT_12_ADDRESS,
+    privateKey: process.env.ACCOUNT_12_PRIVATE_KEY,
+  },
+  {
+    account: process.env.ACCOUNT_13_ADDRESS,
+    privateKey: process.env.ACCOUNT_13_PRIVATE_KEY,
+  },
+  {
+    account: process.env.ACCOUNT_14_ADDRESS,
+    privateKey: process.env.ACCOUNT_14_PRIVATE_KEY,
+  },
+  {
+    account: process.env.ACCOUNT_15_ADDRESS,
+    privateKey: process.env.ACCOUNT_15_PRIVATE_KEY,
+  },
+  {
+    account: process.env.ACCOUNT_16_ADDRESS,
+    privateKey: process.env.ACCOUNT_16_PRIVATE_KEY,
+  },
+  {
+    account: process.env.ACCOUNT_17_ADDRESS,
+    privateKey: process.env.ACCOUNT_17_PRIVATE_KEY,
+  },
+  {
+    account: process.env.ACCOUNT_18_ADDRESS,
+    privateKey: process.env.ACCOUNT_18_PRIVATE_KEY,
+  },
+  {
+    account: process.env.ACCOUNT_19_ADDRESS,
+    privateKey: process.env.ACCOUNT_19_PRIVATE_KEY,
+  },
+  {
+    account: process.env.ACCOUNT_20_ADDRESS,
+    privateKey: process.env.ACCOUNT_20_PRIVATE_KEY,
+  },
+];
 
 // Sblocca gli account utilizzando le chiavi private
-web3.eth.accounts.wallet.add(privateKeyTsoAdmin!);
-web3.eth.accounts.wallet.add(privateKey1!);
-web3.eth.accounts.wallet.add(privateKey2!);
-web3.eth.accounts.wallet.add(privateKey3!);
-web3.eth.accounts.wallet.add(privateKey4!);
-web3.eth.accounts.wallet.add(privateKey5!);
+accountsData.forEach((acc) => {
+  if (acc.privateKey) {
+    web3.eth.accounts.wallet.add(acc.privateKey);
+  }
+});
 
 // Indirizzi dei contratti (passati dal deploy)
 const aggregatorContractAddress = process.env.AGGREGATOR_CONTRACT_ADDRESS;
@@ -42,33 +115,23 @@ const aggregatorContract = new web3.eth.Contract(
 
 const tsoContract = new web3.eth.Contract(TSOContract.abi, tsoContractAddress);
 
+// Funzione per ottenere gli account
 export const getAccounts = () => {
-  return {
-    tsoAdminAccount: {
-      address: tsoAdminAccount,
-      privateKey: privateKeyTsoAdmin,
-    },
-    account1: {
-      address: account1,
-      privateKey: privateKey1,
-    },
-    account2: {
-      address: account2,
-      privateKey: privateKey2,
-    },
-    account3: {
-      address: account3,
-      privateKey: privateKey3,
-    },
-    account4: {
-      address: account4,
-      privateKey: privateKey4,
-    },
-    account5: {
-      address: account5,
-      privateKey: privateKey5,
-    },
-  };
+  const accounts: {
+    [key: string]: {
+      address: string | undefined;
+      privateKey: string | undefined;
+    };
+  } = {};
+
+  accountsData.forEach((acc, index) => {
+    accounts[`account${index}`] = {
+      address: acc.account,
+      privateKey: acc.privateKey,
+    };
+  });
+
+  return accounts;
 };
 
 // Esporta i contratti e gli account

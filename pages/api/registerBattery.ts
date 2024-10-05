@@ -6,7 +6,7 @@ export default async function batteryHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { account1, tsoAdminAccount } = getAccounts();
+  const { account4, tsoAdminAccount } = getAccounts();
   const { capacity, SoC }: Battery = req.body;
 
   if (req.method === "POST") {
@@ -19,15 +19,15 @@ export default async function batteryHandler(
       ) {
         // 1. Registra la batteria
         const tx = await aggregatorContract.methods
-          .registerBattery(account1.address, capacity, SoC)
-          .send({ from: account1.address, gas: "3000000" })
+          .registerBattery(capacity, SoC)
+          .send({ from: account4.address, gas: "3000000" })
           .on("receipt", async (tx) => {
             console.log(tx);
           });
 
         // 2. Associa l'aggregatore
         await tsoContract.methods
-          .setAggregator(account1.address, aggregatorContract.options.address)
+          .setAggregator(account4.address, aggregatorContract.options.address)
           .send({ from: tsoAdminAccount.address });
 
         res.status(200).json({
