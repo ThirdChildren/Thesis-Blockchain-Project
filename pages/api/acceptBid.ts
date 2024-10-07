@@ -1,34 +1,31 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { web3, getAccounts, tsoContract } from "../../web3";
 
-export default async function openMarketHandler(
+export default async function acceptBidHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const {
-    requiredEnergy,
-    isPositiveReserve,
-  }: { requiredEnergy: number; isPositiveReserve: boolean } = req.body;
+  const { bidId }: { bidId: number } = req.body;
   const accounts = getAccounts();
   const tsoAdminAccount = accounts["TSO Admin"].address;
 
   if (req.method === "POST") {
     try {
-      if (tsoContract && tsoContract.methods.openMarket) {
+      if (tsoContract && tsoContract.methods.acceptBid) {
         const tx = await tsoContract.methods
-          .openMarket(requiredEnergy, isPositiveReserve)
+          .acceptBid(bidId)
           .send({ from: tsoAdminAccount })
           .on("receipt", async (tx) => {
             console.log(tx);
           });
 
         res.json({
-          message: "Market opened successfully",
+          message: "Bid selected successfully",
           txHash: tx.transactionHash,
         });
       } else {
         res.status(500).json({
-          error: "tsoContract or tsoContract openMarket method is undefined",
+          error: "tsoContract or tsoContract acceptBid method is undefined",
         });
       }
     } catch (error) {
