@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import batteryHandler from "./registerBattery";
 import openMarketHandler from "./openMarket";
 import placeBidHandler from "./placeBid";
+import acceptBidHandler from "./acceptBid";
 
 export default async function handler(
   req: NextApiRequest,
@@ -13,6 +14,8 @@ export default async function handler(
     return openMarketHandler(req, res);
   } else if (req.url === "/api/placeBid") {
     return placeBidHandler(req, res);
+  } else if (req.url === "/api/acceptBid") {
+    return acceptBidHandler(req, res);
   } else {
     res.status(404).json({ error: "Not Found" });
   }

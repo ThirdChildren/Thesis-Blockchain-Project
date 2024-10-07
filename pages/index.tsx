@@ -3,8 +3,8 @@ import { Stepper, Step, StepLabel, Button, Typography } from "@mui/material";
 import BatteryFullIcon from "@mui/icons-material/BatteryFull";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import BatteryGrid from "../components/BatteryGrid"; // Importa il tuo componente BatteryGrid
 
-// Customizzazione degli Step usando MUI
 const CustomStepIcon = ({
   icon,
   completed,
@@ -15,9 +15,8 @@ const CustomStepIcon = ({
   return (
     <div
       style={{
-        backgroundColor: completed ? "#4caf50" : "#e0e0e0", // Colore diverso per lo step completato
+        backgroundColor: completed ? "#4caf50" : "#e0e0e0",
         borderRadius: "50%",
-
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -31,7 +30,6 @@ const CustomStepIcon = ({
   );
 };
 
-// Component principale per il Stepper
 const StepperComponent = () => {
   const steps = [
     "Register batteries",
@@ -52,7 +50,6 @@ const StepperComponent = () => {
     setActiveStep(0);
   };
 
-  // Uso delle icone di MUI
   const icons = [
     <BatteryFullIcon style={{ fontSize: "24px" }} />,
     <AccessTimeIcon style={{ fontSize: "24px" }} />,
@@ -91,6 +88,8 @@ const StepperComponent = () => {
         </div>
       ) : (
         <div>
+          {/* Mostra BatteryGrid solo nel primo step */}
+          {activeStep === 0 && <BatteryGrid />}
           <div style={{ marginTop: "20px" }}>
             <Button
               disabled={activeStep === 0}
