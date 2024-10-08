@@ -2,15 +2,35 @@ import { useState } from "react";
 import { Button, IconButton } from "@mui/material";
 import TimerIcon from "@mui/icons-material/Timer";
 import { useRouter } from "next/router";
+import axios from "axios";
+import marketOptionsData from "../db/marketOptions.json"; // Assicurati di aggiornare il percorso
 import RegisteredBatteryTable from "./Tables/RegisteredBatteryTable";
 
 const SimulationStart = () => {
   const [showTable, setShowTable] = useState(false);
   const router = useRouter();
 
-  const handleStartSimulation = () => {
-    // Reindirizziamo l'utente alla route /simulation
-    router.push("/simulation");
+  const handleStartSimulation = async () => {
+    // Controlla se ci sono opzioni disponibili
+    if (marketOptionsData.length === 0) return;
+
+    // Prendi il primo elemento per la simulazione
+    const currentMarketOption = marketOptionsData[0];
+
+    try {
+      // Chiama l'API per aprire il mercato
+      await axios.post("/api/openMarket", currentMarketOption);
+
+      // Aggiorna il file JSON rimuovendo il primo elemento e aggiungendolo alla fine
+      /* await axios.post("/api/updateMarketOptions", {
+        marketOption: currentMarketOption,
+      }); */
+
+      // Reindirizza alla route /simulation
+      router.push("/simulation");
+    } catch (error) {
+      console.error("Errore durante l'apertura del mercato:", error);
+    }
   };
 
   return (
