@@ -19,6 +19,7 @@ const BatteryGrid = () => {
   );
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isInfoModal, setIsInfoModal] = useState(false);
+  const [txHash, setTxHash] = useState<string | null>(null); // Stato per la txHash
 
   // Recupera gli account dall'API all'inizio
   useEffect(() => {
@@ -57,6 +58,7 @@ const BatteryGrid = () => {
       setSelectedBattery(battery);
       setErrorMessage(null); // Nessun errore
       setIsInfoModal(false); // È un'operazione di registrazione, non info
+      setTxHash(response.data.txHash); // Imposta la txHash
       setModalOpen(true);
     } catch (error) {
       // Controlla se l'errore è dovuto al fatto che la batteria è già registrata
@@ -64,6 +66,7 @@ const BatteryGrid = () => {
       setSelectedBattery(battery); // Mantieni i dati della batteria
       setIsInfoModal(false); // È un'operazione di registrazione, non info
       setModalOpen(true);
+      setTxHash(null); // Reset della txHash in caso di errore
       console.error("Error registering battery:", error);
     }
   };
@@ -71,6 +74,7 @@ const BatteryGrid = () => {
   const handleModalClose = () => {
     setModalOpen(false);
     setSelectedBattery(null);
+    setTxHash(null); // Resetta la txHash quando il modale si chiude
   };
 
   return (
@@ -131,6 +135,10 @@ const BatteryGrid = () => {
                       Capacity: {selectedBattery.capacity}
                     </Typography>
                     <Typography>SoC: {selectedBattery.SoC}</Typography>
+                    {/* Aggiungi la txHash se disponibile */}
+                    {txHash && (
+                      <Typography>Transaction Hash: {txHash}</Typography>
+                    )}
                   </>
                 )}
                 <Button

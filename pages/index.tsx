@@ -3,7 +3,8 @@ import { Stepper, Step, StepLabel, Button, Typography } from "@mui/material";
 import BatteryFullIcon from "@mui/icons-material/BatteryFull";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import BatteryGrid from "../components/BatteryGrid"; // Importa il tuo componente BatteryGrid
+import BatteryGrid from "../components/BatteryGrid";
+import SimulationStart from "../components/SimulationStart";
 
 const CustomStepIcon = ({
   icon,
@@ -90,6 +91,10 @@ const StepperComponent = () => {
         <div>
           {/* Mostra BatteryGrid solo nel primo step */}
           {activeStep === 0 && <BatteryGrid />}
+
+          {/* Mostra la tabella delle batterie registrate nel secondo step */}
+          {activeStep === 1 && <SimulationStart />}
+
           <div style={{ marginTop: "20px" }}>
             <Button
               disabled={activeStep === 0}

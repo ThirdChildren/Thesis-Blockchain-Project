@@ -11,7 +11,6 @@ export default async function batteryHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  console.log(req.body);
   const { address, capacity, SoC }: { address: string } & Battery = req.body;
   const accounts = getAccounts();
   const tsoAdminAddress = accounts["TSO Admin"].address;
@@ -42,9 +41,10 @@ export default async function batteryHandler(
 
         // 2. Se la registrazione va a buon fine, scrivi i dati nel file JSON
         const newBattery = {
-          Owner: address,
-          Capacity: capacity,
-          SoC: SoC,
+          owner: address,
+          capacity: capacity,
+          soc: SoC,
+          txHash: tx.transactionHash,
         };
 
         let registeredBatteries: any[] = [];
