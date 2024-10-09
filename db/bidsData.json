@@ -1,0 +1,300 @@
+{
+  "session1": [
+    {
+      "batteryOwner": "0x1e6e78372ca1B30211234A3AA4B4665beB9A1A0e",
+      "amountInKWh": 151,
+      "pricePerMWh": 40
+    },
+    {
+      "batteryOwner": "0x9cfD36771A496f4BC904b94b778fC772759B605d",
+      "amountInKWh": 186,
+      "pricePerMWh": 52
+    },
+    {
+      "batteryOwner": "0xF92573C7CacAdbF1611E1eb1d8fd9Efa0F910930",
+      "amountInKWh": 180,
+      "pricePerMWh": 48
+    },
+    {
+      "batteryOwner": "0x6e795C7cD88dAacE8Ef15f40AdB82a09AF9A01B3",
+      "amountInKWh": 250,
+      "pricePerMWh": 72
+    },
+    {
+      "batteryOwner": "0x822D876ef6eB86E27cE221779dB4F99670325C11",
+      "amountInKWh": 175,
+      "pricePerMWh": 68
+    },
+    {
+      "batteryOwner": "0xbC47f13d2121E7857b539457b9FD36C090719aFF",
+      "amountInKWh": 210,
+      "pricePerMWh": 40
+    },
+    {
+      "batteryOwner": "0x539Ef7608d9FAD3EF4848644cb1554b6B68fb044",
+      "amountInKWh": 191,
+      "pricePerMWh": 51
+    },
+    {
+      "batteryOwner": "0x561827f62dC68B12DD8B8F4AAC9A2ed81E7Dd8Be",
+      "amountInKWh": 195,
+      "pricePerMWh": 61
+    },
+    {
+      "batteryOwner": "0x66112DaCb2db455B567DF041917ff6ae4b3680D8",
+      "amountInKWh": 131,
+      "pricePerMWh": 40
+    },
+    {
+      "batteryOwner": "0xaA2091b5517B0c71Ebbd8A5f3784F04C7ddE790d",
+      "amountInKWh": 200,
+      "pricePerMWh": 41
+    },
+    {
+      "batteryOwner": "0xAa379CfD3629a93e5C046FF137b42a6b9201392A",
+      "amountInKWh": 242,
+      "pricePerMWh": 52
+    },
+    {
+      "batteryOwner": "0xd4B9eF83FDb34DD1BC24d419984621e0Eb953c1C",
+      "amountInKWh": 156,
+      "pricePerMWh": 68
+    },
+    {
+      "batteryOwner": "0x3a01Bf0fCDbF8CbA220001D01076ec345eE9b871",
+      "amountInKWh": 174,
+      "pricePerMWh": 41
+    },
+    {
+      "batteryOwner": "0xA9F7EB725979040b72C6582A1CE82089D65AdBf8",
+      "amountInKWh": 190,
+      "pricePerMWh": 60
+    },
+    {
+      "batteryOwner": "0x9A6317C61f98D7fa7bceed5020e468c10e570d53",
+      "amountInKWh": 212,
+      "pricePerMWh": 48
+    }
+  ],
+  "session2": [
+    {
+      "batteryOwner": "0x6e795C7cD88dAacE8Ef15f40AdB82a09AF9A01B3",
+      "amountInKWh": 137,
+      "pricePerMWh": 105
+    },
+    {
+      "batteryOwner": "0x1e6e78372ca1B30211234A3AA4B4665beB9A1A0e",
+      "amountInKWh": 225,
+      "pricePerMWh": 154
+    },
+    {
+      "batteryOwner": "0xAbb887261e9b8Db0e34871D8A21AAa091dAA2068",
+      "amountInKWh": 133,
+      "pricePerMWh": 132
+    },
+    {
+      "batteryOwner": "0x539Ef7608d9FAD3EF4848644cb1554b6B68fb044",
+      "amountInKWh": 159,
+      "pricePerMWh": 88
+    },
+    {
+      "batteryOwner": "0xA9F7EB725979040b72C6582A1CE82089D65AdBf8",
+      "amountInKWh": 246,
+      "pricePerMWh": 92
+    },
+    {
+      "batteryOwner": "0x143e68d23369218EAEd8E072961B1A6f7f48D834",
+      "amountInKWh": 206,
+      "pricePerMWh": 109
+    },
+    {
+      "batteryOwner": "0xaA2091b5517B0c71Ebbd8A5f3784F04C7ddE790d",
+      "amountInKWh": 190,
+      "pricePerMWh": 115
+    },
+    {
+      "batteryOwner": "0x9cfD36771A496f4BC904b94b778fC772759B605d",
+      "amountInKWh": 141,
+      "pricePerMWh": 136
+    },
+    {
+      "batteryOwner": "0xFeEE9E7dF3D11cb102d5E629b841F69F08Db429F",
+      "amountInKWh": 240,
+      "pricePerMWh": 101
+    },
+    {
+      "batteryOwner": "0xAa379CfD3629a93e5C046FF137b42a6b9201392A",
+      "amountInKWh": 128,
+      "pricePerMWh": 174
+    },
+    {
+      "batteryOwner": "0x3a01Bf0fCDbF8CbA220001D01076ec345eE9b871",
+      "amountInKWh": 128,
+      "pricePerMWh": 143
+    },
+    {
+      "batteryOwner": "0x82597d369BB02DAe89937AEb0FF154939F554367",
+      "amountInKWh": 163,
+      "pricePerMWh": 154
+    },
+    {
+      "batteryOwner": "0xbC47f13d2121E7857b539457b9FD36C090719aFF",
+      "amountInKWh": 193,
+      "pricePerMWh": 109
+    },
+    {
+      "batteryOwner": "0xd4B9eF83FDb34DD1BC24d419984621e0Eb953c1C",
+      "amountInKWh": 179,
+      "pricePerMWh": 136
+    }
+  ],
+  "session3": [
+    {
+      "batteryOwner": "0xbC47f13d2121E7857b539457b9FD36C090719aFF",
+      "amountInKWh": 181,
+      "pricePerMWh": 63
+    },
+    {
+      "batteryOwner": "0xf45a1e6f1dA17327AbDDF5f7C9fF9ed1443e3db9",
+      "amountInKWh": 131,
+      "pricePerMWh": 76
+    },
+    {
+      "batteryOwner": "0x539Ef7608d9FAD3EF4848644cb1554b6B68fb044",
+      "amountInKWh": 190,
+      "pricePerMWh": 67
+    },
+    {
+      "batteryOwner": "0x143e68d23369218EAEd8E072961B1A6f7f48D834",
+      "amountInKWh": 233,
+      "pricePerMWh": 57
+    },
+    {
+      "batteryOwner": "0xaA2091b5517B0c71Ebbd8A5f3784F04C7ddE790d",
+      "amountInKWh": 190,
+      "pricePerMWh": 47
+    },
+    {
+      "batteryOwner": "0x3a01Bf0fCDbF8CbA220001D01076ec345eE9b871",
+      "amountInKWh": 245,
+      "pricePerMWh": 61
+    },
+    {
+      "batteryOwner": "0x822D876ef6eB86E27cE221779dB4F99670325C11",
+      "amountInKWh": 250,
+      "pricePerMWh": 60
+    },
+    {
+      "batteryOwner": "0x66112DaCb2db455B567DF041917ff6ae4b3680D8",
+      "amountInKWh": 175,
+      "pricePerMWh": 56
+    },
+    {
+      "batteryOwner": "0x6e795C7cD88dAacE8Ef15f40AdB82a09AF9A01B3",
+      "amountInKWh": 214,
+      "pricePerMWh": 76
+    },
+    {
+      "batteryOwner": "0xAbb887261e9b8Db0e34871D8A21AAa091dAA2068",
+      "amountInKWh": 140,
+      "pricePerMWh": 72
+    },
+    {
+      "batteryOwner": "0x82597d369BB02DAe89937AEb0FF154939F554367",
+      "amountInKWh": 228,
+      "pricePerMWh": 61
+    },
+    {
+      "batteryOwner": "0xF92573C7CacAdbF1611E1eb1d8fd9Efa0F910930",
+      "amountInKWh": 150,
+      "pricePerMWh": 44
+    },
+    {
+      "batteryOwner": "0x9cfD36771A496f4BC904b94b778fC772759B605d",
+      "amountInKWh": 173,
+      "pricePerMWh": 58
+    },
+    {
+      "batteryOwner": "0x1e6e78372ca1B30211234A3AA4B4665beB9A1A0e",
+      "amountInKWh": 167,
+      "pricePerMWh": 48
+    },
+    {
+      "batteryOwner": "0xFeEE9E7dF3D11cb102d5E629b841F69F08Db429F",
+      "amountInKWh": 230,
+      "pricePerMWh": 65
+    }
+  ],
+  "session4": [
+    {
+      "batteryOwner": "0x82597d369BB02DAe89937AEb0FF154939F554367",
+      "amountInKWh": 125,
+      "pricePerMWh": 149
+    },
+    {
+      "batteryOwner": "0x822D876ef6eB86E27cE221779dB4F99670325C11",
+      "amountInKWh": 159,
+      "pricePerMWh": 143
+    },
+    {
+      "batteryOwner": "0x6e795C7cD88dAacE8Ef15f40AdB82a09AF9A01B3",
+      "amountInKWh": 244,
+      "pricePerMWh": 144
+    },
+    {
+      "batteryOwner": "0x561827f62dC68B12DD8B8F4AAC9A2ed81E7Dd8Be",
+      "amountInKWh": 219,
+      "pricePerMWh": 88
+    },
+    {
+      "batteryOwner": "0xbC47f13d2121E7857b539457b9FD36C090719aFF",
+      "amountInKWh": 178,
+      "pricePerMWh": 123
+    },
+    {
+      "batteryOwner": "0xAbb887261e9b8Db0e34871D8A21AAa091dAA2068",
+      "amountInKWh": 162,
+      "pricePerMWh": 105
+    },
+    {
+      "batteryOwner": "0x143e68d23369218EAEd8E072961B1A6f7f48D834",
+      "amountInKWh": 182,
+      "pricePerMWh": 170
+    },
+    {
+      "batteryOwner": "0x3a01Bf0fCDbF8CbA220001D01076ec345eE9b871",
+      "amountInKWh": 182,
+      "pricePerMWh": 106
+    },
+    {
+      "batteryOwner": "0xaA2091b5517B0c71Ebbd8A5f3784F04C7ddE790d",
+      "amountInKWh": 230,
+      "pricePerMWh": 174
+    },
+    {
+      "batteryOwner": "0x1e6e78372ca1B30211234A3AA4B4665beB9A1A0e",
+      "amountInKWh": 190,
+      "pricePerMWh": 116
+    },
+    {
+      "batteryOwner": "0xA9F7EB725979040b72C6582A1CE82089D65AdBf8",
+      "amountInKWh": 226,
+      "pricePerMWh": 101
+    },
+    {
+      "batteryOwner": "0x66112DaCb2db455B567DF041917ff6ae4b3680D8",
+      "amountInKWh": 148,
+      "pricePerMWh": 151
+    },
+    {
+      "batteryOwner": "0x539Ef7608d9FAD3EF4848644cb1554b6B68fb044",
+      "amountInKWh": 166,
+      "pricePerMWh": 88
+    },
+    {
+      "batteryOwner": "0x9cfD36771A496f4BC904b94b778fC772759B605d",
+      "amountInKWh": 232,
+      "pricePerMWh": 106
+    }
+  ]
+}

@@ -1,1 +1,122 @@
-[]
+[
+  {
+    "owner": "0x561827f62dC68B12DD8B8F4AAC9A2ed81E7Dd8Be",
+    "capacity": 236,
+    "soc": 100,
+    "txHash": "0xbd8bd927fa626ef8633e7cd7bb6f09c57f2621395c20029bdc8d1424c4b3f8a1"
+  },
+  {
+    "owner": "0xbC47f13d2121E7857b539457b9FD36C090719aFF",
+    "capacity": 435,
+    "soc": 76,
+    "txHash": "0x5f25f5ec5b63edf83697e1792a9aaa97f36565bd1968df66c268cdf0005c1d30"
+  },
+  {
+    "owner": "0x6e795C7cD88dAacE8Ef15f40AdB82a09AF9A01B3",
+    "capacity": 392,
+    "soc": 97,
+    "txHash": "0xfa5461f6e8538cc51362ae6b7c9791e00d0a862e41c5aa38aeb72a455b202dda"
+  },
+  {
+    "owner": "0x539Ef7608d9FAD3EF4848644cb1554b6B68fb044",
+    "capacity": 327,
+    "soc": 93,
+    "txHash": "0xce5c7d8f080f4c56f1960087830adca608162a358174d4fe1425edcfaba4236b"
+  },
+  {
+    "owner": "0x9cfD36771A496f4BC904b94b778fC772759B605d",
+    "capacity": 305,
+    "soc": 96,
+    "txHash": "0xf7cf18bf898420a1e3c945b4961eab3b0fc24c2ef2cc1f76fb357189aae1f327"
+  },
+  {
+    "owner": "0xFeEE9E7dF3D11cb102d5E629b841F69F08Db429F",
+    "capacity": 420,
+    "soc": 68,
+    "txHash": "0xb17382b3f40e89f168b41db077e9a213965f335f33e0bf654a68108412e48de5"
+  },
+  {
+    "owner": "0xf45a1e6f1dA17327AbDDF5f7C9fF9ed1443e3db9",
+    "capacity": 153,
+    "soc": 94,
+    "txHash": "0xa122e6a4c58ce643919f7203ecd5c44dd97e28f3904d5e0d5cb836dcef6c2ea6"
+  },
+  {
+    "owner": "0x3a01Bf0fCDbF8CbA220001D01076ec345eE9b871",
+    "capacity": 461,
+    "soc": 88,
+    "txHash": "0x4943fd825b019c162bfae4c12a463c5bb8eb30deb26323ef28b2e6c3f4698a65"
+  },
+  {
+    "owner": "0x9A6317C61f98D7fa7bceed5020e468c10e570d53",
+    "capacity": 382,
+    "soc": 89,
+    "txHash": "0xe761b51ef813dd89ace7d03af466f21fdebd48ff27b774f49f17e23562889dfc"
+  },
+  {
+    "owner": "0xAbb887261e9b8Db0e34871D8A21AAa091dAA2068",
+    "capacity": 204,
+    "soc": 73,
+    "txHash": "0x2cd5b0583d7eb2a8a372fae897a2f03bafe8957586b41b38de3de78d565c873b"
+  },
+  {
+    "owner": "0x82597d369BB02DAe89937AEb0FF154939F554367",
+    "capacity": 344,
+    "soc": 70,
+    "txHash": "0xb17c8e4ab5c2b54994e3fb9aca946e1dbc37cb46e44132ea17a473d420049b61"
+  },
+  {
+    "owner": "0xaA2091b5517B0c71Ebbd8A5f3784F04C7ddE790d",
+    "capacity": 327,
+    "soc": 72,
+    "txHash": "0x9f796388ab4e075e18b3068e4ce172f67db0392579a62ceb607d37217814160b"
+  },
+  {
+    "owner": "0xF92573C7CacAdbF1611E1eb1d8fd9Efa0F910930",
+    "capacity": 290,
+    "soc": 82,
+    "txHash": "0x25c105f774fb5b71ecbac38e4506173d10104a66ac6f849fc0c1af3c612fdceb"
+  },
+  {
+    "owner": "0x822D876ef6eB86E27cE221779dB4F99670325C11",
+    "capacity": 389,
+    "soc": 75,
+    "txHash": "0x488803e7113cc0a867ab43f4731afbee16a8f2155f47407bd7334700e0443c83"
+  },
+  {
+    "owner": "0xd4B9eF83FDb34DD1BC24d419984621e0Eb953c1C",
+    "capacity": 256,
+    "soc": 83,
+    "txHash": "0x7b5650d5961d62c3cf21cdc9dd84a55126df34de8814b5abed6a6f3f65dc89a8"
+  },
+  {
+    "owner": "0x1e6e78372ca1B30211234A3AA4B4665beB9A1A0e",
+    "capacity": 342,
+    "soc": 68,
+    "txHash": "0x1c0972d5f353c8d12f9eb62770549fc98e2bfb11fe2ae3968e62f50b78d0961e"
+  },
+  {
+    "owner": "0x143e68d23369218EAEd8E072961B1A6f7f48D834",
+    "capacity": 399,
+    "soc": 85,
+    "txHash": "0x57d1b7ae903f7c802d1010253a4a4556a7109f29e86afce6e54dc2c0e8cdbb4e"
+  },
+  {
+    "owner": "0xA9F7EB725979040b72C6582A1CE82089D65AdBf8",
+    "capacity": 433,
+    "soc": 70,
+    "txHash": "0xc54c7afcbe7d3fd8e4f1b6f3f7c38f7e51f3bfe71371297b655639c120b4924a"
+  },
+  {
+    "owner": "0xAa379CfD3629a93e5C046FF137b42a6b9201392A",
+    "capacity": 302,
+    "soc": 98,
+    "txHash": "0x3fe48df024b5a2d84e26477e326612bf87724a4c3765a14298de5874b6b2c002"
+  },
+  {
+    "owner": "0x66112DaCb2db455B567DF041917ff6ae4b3680D8",
+    "capacity": 282,
+    "soc": 98,
+    "txHash": "0x22040144507642503866b951eab70466bd49932ebbd021871bcc95640f3c8b98"
+  }
+]

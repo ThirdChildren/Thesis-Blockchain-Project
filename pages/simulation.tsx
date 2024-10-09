@@ -8,46 +8,142 @@ import {
   DialogContent,
   DialogTitle,
   Button,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+  Paper,
 } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import marketOptionsData from "../db/marketOptions.json";
+import bidsData from "../db/bidsData.json"; // Importa le bids per sessione
 import axios from "axios";
+import PlacedBidsTable from "../components/Tables/PlacedBidsTable"; // Importa la tabella
 
 const SimulationPage = () => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [openSessionModal, setOpenSessionModal] = useState(false);
+  const [selectedSession, setSelectedSession] = useState<number | null>(null);
+  const [showTable, setShowTable] = useState(false);
 
   const [currentMarket, setCurrentMarket] = useState(marketOptionsData[0]);
 
   const handleSimulationEnd = async () => {
     try {
-      // Chiamata API per chiudere il mercato
       const response = await axios.post("/api/closeMarket");
       console.log("Market closed:", response.data);
 
-      // Reindirizza l'utente alla route /accept-bids dopo aver chiuso il mercato
       router.push("/accept-bids");
     } catch (error) {
       console.error("Error closing market:", error);
     }
   };
 
-  // Funzione per gestire l'apertura del modal
+  // Funzione per gestire l'apertura del modal info
   const handleClickOpen = () => {
     setOpen(true);
   };
 
-  // Funzione per chiudere il modal
+  // Funzione per chiudere il modal info
   const handleClose = () => {
     setOpen(false);
+  };
+
+  // Funzione per gestire l'apertura del modal per selezionare la sessione
+  const handleOpenSessionModal = () => {
+    setOpenSessionModal(true);
+  };
+
+  // Funzione per chiudere il modal della sessione e avviare il timer
+  const handleSessionSelect = () => {
+    setOpenSessionModal(false);
+    if (selectedSession !== null) {
+      startBiddingProcess(selectedSession);
+    }
+  };
+
+  // Funzione per gestire la selezione della sessione
+  const handleSessionChange = (sessionNumber: number) => {
+    setSelectedSession(sessionNumber);
+  };
+
+  // Avvio della simulazione e piazzamento delle bid
+  const startBiddingProcess = (sessionNumber: number) => {
+    const bidsForSession =
+      bidsData[`session${sessionNumber}` as keyof typeof bidsData];
+    if (!bidsForSession) {
+      console.error("No bids found for the selected session");
+      return;
+    }
+
+    let bidIndex = 0;
+    const totalBids = bidsForSession.length;
+    const bidInterval = (15 * 60 * 1000) / (totalBids * 10); // 15 minuti a velocità 10x, divisi per il numero di bids
+
+    const interval = setInterval(() => {
+      if (bidIndex < totalBids) {
+        const bid = bidsForSession[bidIndex];
+        axios.post("/api/placeBid", bid).then(() => {
+          console.log("Bid placed:", bid);
+        });
+        bidIndex++;
+      } else {
+        clearInterval(interval);
+      }
+    }, bidInterval);
   };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
       <h1 className="text-3xl font-bold mb-6">Simulation in progress</h1>
 
-      {/* Mostra il timer */}
-      <SimulationClock onEnd={handleSimulationEnd} />
+      {/* Pulsante per selezionare la sessione */}
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleOpenSessionModal}
+      >
+        Select Session
+      </Button>
+
+      {/* Modal per selezionare la sessione */}
+      <Dialog
+        open={openSessionModal}
+        onClose={() => setOpenSessionModal(false)}
+        aria-labelledby="session-select-dialog"
+      >
+        <DialogTitle id="session-select-dialog">Session n.</DialogTitle>
+        <DialogContent>
+          <FormGroup>
+            {[1, 2, 3, 4].map((session) => (
+              <FormControlLabel
+                key={session}
+                control={
+                  <Checkbox
+                    checked={selectedSession === session}
+                    onChange={() => handleSessionChange(session)}
+                  />
+                }
+                label={`Session ${session}`}
+              />
+            ))}
+          </FormGroup>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={handleSessionSelect}
+            color="primary"
+            variant="contained"
+          >
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Timer */}
+      {selectedSession !== null && (
+        <SimulationClock onEnd={handleSimulationEnd} />
+      )}
 
       {/* Icona Info per aprire il modal */}
       <IconButton
@@ -59,6 +155,16 @@ const SimulationPage = () => {
       >
         <InfoIcon style={{ fontSize: "40px" }} />
       </IconButton>
+
+      {/* Pulsante Show Table */}
+      <Button
+        variant="contained"
+        color="secondary"
+        className="mt-4"
+        onClick={() => setShowTable(!showTable)}
+      >
+        Show Table
+      </Button>
 
       {/* Modal per visualizzare le informazioni del mercato */}
       <Dialog
@@ -84,6 +190,9 @@ const SimulationPage = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Tabella delle bid */}
+      {showTable && <PlacedBidsTable />}
     </div>
   );
 };

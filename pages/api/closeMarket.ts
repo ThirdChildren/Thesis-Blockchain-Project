@@ -10,24 +10,19 @@ export default async function closeMarketHandler(
 
   if (req.method === "POST") {
     try {
-      if (tsoContract && tsoContract.methods.closeMarket) {
-        const tx = await tsoContract.methods
-          .closeMarket()
-          .send({ from: tsoAdminAccount })
-          .on("receipt", async (tx) => {
-            console.log(tx);
-          });
+      const tx = await tsoContract.methods
+        .closeMarket()
+        .send({ from: tsoAdminAccount, gas: "3000000" })
+        .on("receipt", (tx) => {
+          console.log("Transaction successful:", tx);
+        });
 
-        res.json({
-          message: "Market closed successfully",
-          txHash: tx.transactionHash,
-        });
-      } else {
-        res.status(500).json({
-          error: "tsoContract or tsoContract closeMarket method is undefined",
-        });
-      }
+      res.json({
+        message: "Market closed successfully",
+        txHash: tx.transactionHash,
+      });
     } catch (error) {
+      console.error("Error closing market:", error);
       res.status(500).json({ error: (error as any).message });
     }
   }
