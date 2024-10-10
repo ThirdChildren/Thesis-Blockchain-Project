@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 
 interface Bid {
+  bidId: number;
   batteryOwner: string;
   amountInKWh: number;
   totalPrice: number;
@@ -53,6 +54,7 @@ const PlacedBidTable = () => {
       <Table>
         <TableHead>
           <TableRow>
+            <TableCell>Bid ID</TableCell>
             <TableCell>Battery Owner</TableCell>
             <TableCell>Amount (kWh)</TableCell>
             <TableCell>Total Price ($)</TableCell>
@@ -62,6 +64,7 @@ const PlacedBidTable = () => {
         <TableBody>
           {bids.map((bid, index) => (
             <TableRow key={index}>
+              <TableCell>{bid.bidId}</TableCell>
               <TableCell>{bid.batteryOwner}</TableCell>
               <TableCell>{bid.amountInKWh}</TableCell>
               <TableCell>{bid.totalPrice}</TableCell>

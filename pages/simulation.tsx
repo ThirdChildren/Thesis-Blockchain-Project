@@ -24,9 +24,8 @@ const SimulationPage = () => {
   const [open, setOpen] = useState(false);
   const [openSessionModal, setOpenSessionModal] = useState(false);
   const [selectedSession, setSelectedSession] = useState<number | null>(null);
-  const [showTable, setShowTable] = useState(false);
-
   const [currentMarket, setCurrentMarket] = useState(marketOptionsData[0]);
+  const [showTable, setShowTable] = useState(false);
 
   const handleSimulationEnd = async () => {
     try {
@@ -55,9 +54,17 @@ const SimulationPage = () => {
   };
 
   // Funzione per chiudere il modal della sessione e avviare il timer
-  const handleSessionSelect = () => {
+  const handleSessionSelect = async () => {
     setOpenSessionModal(false);
     if (selectedSession !== null) {
+      // Imposta i dati del mercato in base alla sessione selezionata
+      const selectedMarket = marketOptionsData[selectedSession - 1];
+      setCurrentMarket(selectedMarket);
+
+      // Chiamata all'API per aprire il mercato con i dati correnti
+      await axios.post("/api/openMarket", selectedMarket);
+
+      // Avvia la simulazione e il processo di bidding
       startBiddingProcess(selectedSession);
     }
   };
