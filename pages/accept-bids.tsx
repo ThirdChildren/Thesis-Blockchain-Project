@@ -32,6 +32,8 @@ const AcceptBidPage = () => {
   const [acceptedBids, setAcceptedBids] = useState<Bid[]>([]);
   const [payments, setPayments] = useState<Payment[]>([]);
   const [acceptedBidIds, setAcceptedBidIds] = useState<number[]>([]); // Traccia gli ID delle bid accettate
+  const [totalAcceptedAmount, setTotalAcceptedAmount] = useState<number>(0); // Somma degli amount accettati
+  const [requiredEnergy, setRequiredEnergy] = useState<number>(0); // Valore richiesto dal TSO
 
   useEffect(() => {
     // Ottieni le bid dal file JSON e seleziona le migliori offerte
@@ -44,7 +46,14 @@ const AcceptBidPage = () => {
       setBids(sortedBids);
     };
 
+    const fetchRequiredEnergy = async () => {
+      const { data } = await axios.get("/api/getRequiredEnergy");
+      console.log("Required energy:", data);
+      setRequiredEnergy(data.requiredEnergy);
+    };
+
     fetchBids();
+    fetchRequiredEnergy();
   }, []);
 
   const acceptBid = async (bid: Bid) => {
@@ -66,6 +75,19 @@ const AcceptBidPage = () => {
         ...prev,
         { aggregatorCommission, batteryOwnerPayment },
       ]);
+
+      // Aggiorna la somma degli amountInKWh accettati
+      setTotalAcceptedAmount((prevTotal) => {
+        const newTotal = prevTotal + bid.amountInKWh;
+
+        // Controlla se la somma supera il requiredEnergy
+        if (newTotal >= requiredEnergy) {
+          console.log("Required energy reached. Redirecting...");
+          window.location.href = "/"; // Redirect alla pagina principale
+        }
+
+        return newTotal;
+      });
     } catch (error) {
       console.error("Error accepting bid:", error);
     }
