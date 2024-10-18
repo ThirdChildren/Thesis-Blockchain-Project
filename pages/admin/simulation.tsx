@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import SimulationClock from "../components/Clock/SimulationClock";
+import SimulationClock from "../../components/Clock/SimulationClock";
 import {
   IconButton,
   Dialog,
@@ -14,10 +14,10 @@ import {
   Paper,
 } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
-import marketOptionsData from "../db/marketOptions.json";
-import bidsData from "../db/bidsData.json"; // Importa le bids per sessione
+import marketOptionsData from "../../db/marketOptions.json";
+import bidsData from "../../db/bidsData.json"; // Importa le bids per sessione
 import axios from "axios";
-import PlacedBidsTable from "../components/Tables/PlacedBidsTable"; // Importa la tabella
+import PlacedBidsTable from "../../components/Tables/PlacedBidsTable"; // Importa la tabella
 
 const SimulationPage = () => {
   const router = useRouter();
