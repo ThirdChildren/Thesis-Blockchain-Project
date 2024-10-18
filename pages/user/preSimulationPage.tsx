@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
-import Battery from "../../components/Battery/Battery";
-import Image from "next/image";
-import aggregatorImg from "./../../public/aggregator.png";
-import tsoImg from "./../../public/tso.png";
 import { Button, Dialog, DialogTitle, DialogContent } from "@mui/material";
 import axios from "axios";
 import RegisteredBatteryTable from "../../components/Tables/RegisteredBatteryTable";
-
+import LayoutPreRegistration from "../../components/Layouts/LayoutPreRegistration";
+import LayoutPostRegistration from "../../components/Layouts/LayoutPostRegistration";
 import batteriesData from "../../db/batteries.json";
 
 const PreSimulationPage: React.FC = () => {
@@ -69,76 +66,51 @@ const PreSimulationPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-between py-8">
-      {/* Pulsante "Register Batteries" */}
-      {!batteriesRegistered && (
+    <div
+      className="min-h-screen flex flex-col items-center justify-between py-8"
+      style={{ textAlign: "center", marginBottom: "40px" }}
+    >
+      {/* Sezione principale */}
+      {!batteriesRegistered ? (
         <div>
+          {/* Pulsante "Register Batteries" */}
           <Button
             variant="contained"
             color="success"
             sx={{ borderRadius: "200px", padding: "10px 20px" }}
-            onClick={handleRegisterBatteries} // Aggiungi l'azione di click
+            onClick={handleRegisterBatteries}
             disabled={loading} // Disabilita il pulsante durante il caricamento
           >
             {loading ? "Registering..." : "Register Batteries"}
           </Button>
-        </div>
-      )}
 
-      {/* Pulsante "Start Simulation" se le batterie sono state registrate */}
-      {batteriesRegistered && (
+          <LayoutPreRegistration handleOpenDialog={handleOpenDialog} />
+        </div>
+      ) : (
         <div>
+          {/* Pulsante "Start Simulation" - centrato e con margine */}
+
           <Button
             variant="contained"
             color="primary"
-            sx={{ borderRadius: "200px", padding: "10px 20px" }}
+            sx={{
+              borderRadius: "200px",
+              padding: "10px 20px",
+              marginBottom: "40px",
+            }}
           >
             Start Simulation
           </Button>
+
+          {/* Layout post-registrazione */}
+          <LayoutPostRegistration handleOpenDialog={handleOpenDialog} />
+
+          {/* Spazio extra tra il layout e la tabella */}
+          <div style={{ marginTop: "40px" }}>
+            <RegisteredBatteryTable />
+          </div>
         </div>
       )}
-
-      {/* Sezione principale */}
-      <div className="flex-grow flex items-center justify-center w-full">
-        <div className="grid grid-cols-3 gap-8 w-full max-w-screen-lg">
-          {/* Sezione Batterie (colonna sinistra) */}
-          <div className="flex flex-col space-y-4">
-            <div className="grid grid-cols-2 gap-2">
-              {batteriesData.slice(0, 10).map((battery, idx) => (
-                <Battery key={idx} onClick={() => handleOpenDialog(idx)} />
-              ))}
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              {batteriesData.slice(10, 20).map((battery, idx) => (
-                <Battery key={idx} onClick={() => handleOpenDialog(idx + 10)} />
-              ))}
-            </div>
-          </div>
-
-          {/* Sezione Aggregator (colonna centrale) */}
-          <div className="flex flex-col items-center justify-center">
-            <h2 className="font-bold text-lg mb-4">AGGREGATOR</h2>
-            <Image
-              src={aggregatorImg}
-              alt="Aggregator"
-              className="w-64 h-64 object-contain"
-            />
-          </div>
-
-          {/* Sezione TSO (colonna destra) */}
-          <div className="flex flex-col items-center justify-center">
-            <h2 className="font-bold text-lg mb-4">TSO</h2>
-            <Image
-              src={tsoImg}
-              alt="TSO"
-              className="w-64 h-64 object-contain"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Tabella delle batterie registrate */}
-      {batteriesRegistered && <RegisteredBatteryTable />}
 
       {/* Dialog per la visualizzazione delle informazioni della batteria */}
       <Dialog open={openDialog} onClose={handleCloseDialog}>
