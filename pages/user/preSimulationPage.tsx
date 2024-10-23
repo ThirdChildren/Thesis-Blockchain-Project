@@ -6,7 +6,13 @@ import LayoutPreRegistration from "../../components/Layouts/LayoutPreRegistratio
 import LayoutPostRegistration from "../../components/Layouts/LayoutPostRegistration";
 import batteriesData from "../../db/batteries.json";
 
-const PreSimulationPage: React.FC = () => {
+interface PreSimulationPageProps {
+  onStartSimulation: () => void; // Prop per avviare la simulazione
+}
+
+const PreSimulationPage: React.FC<PreSimulationPageProps> = ({
+  onStartSimulation,
+}) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedBatteryIndex, setSelectedBatteryIndex] = useState<
     number | null
@@ -48,7 +54,7 @@ const PreSimulationPage: React.FC = () => {
       // Manda una richiesta API per ogni batteria
       const registrationPromises = batteriesData.map((battery, idx) =>
         axios.post("/api/registerBattery", {
-          address: batteryAddresses[idx], // Indirizzo del proprietario della batteria
+          address: batteryAddresses[idx],
           capacity: battery.capacity,
           SoC: battery.SoC,
         })
@@ -79,7 +85,7 @@ const PreSimulationPage: React.FC = () => {
             color="success"
             sx={{ borderRadius: "200px", padding: "10px 20px" }}
             onClick={handleRegisterBatteries}
-            disabled={loading} // Disabilita il pulsante durante il caricamento
+            disabled={loading}
           >
             {loading ? "Registering..." : "Register Batteries"}
           </Button>
@@ -88,8 +94,7 @@ const PreSimulationPage: React.FC = () => {
         </div>
       ) : (
         <div>
-          {/* Pulsante "Start Simulation" - centrato e con margine */}
-
+          {/* Pulsante "Start Simulation" */}
           <Button
             variant="contained"
             color="primary"
@@ -98,6 +103,7 @@ const PreSimulationPage: React.FC = () => {
               padding: "10px 20px",
               marginBottom: "40px",
             }}
+            onClick={onStartSimulation} // Chiamata alla funzione per cambiare pagina
           >
             Start Simulation
           </Button>
@@ -105,7 +111,7 @@ const PreSimulationPage: React.FC = () => {
           {/* Layout post-registrazione */}
           <LayoutPostRegistration handleOpenDialog={handleOpenDialog} />
 
-          {/* Spazio extra tra il layout e la tabella */}
+          {/* tabella batterie registrate */}
           <div style={{ marginTop: "40px" }}>
             <RegisteredBatteryTable />
           </div>
