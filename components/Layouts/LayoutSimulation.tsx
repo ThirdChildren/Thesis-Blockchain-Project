@@ -5,7 +5,7 @@ import axios from "axios";
 import Battery from "../Battery/Battery";
 import BatteryPlaced from "../Battery/BatteryPlaced";
 
-import aggregatorImg from "../../public/aggregator.png";
+import aggregatorImg from "../../public/aggregator-simulation.png";
 import registeredBatteries from "../../db/registeredBatteries.json";
 import bidsData from "../../db/bidsData.json";
 
@@ -13,19 +13,11 @@ interface LayoutSimulationProps {
   handleOpenDialog: (index: number) => void;
 }
 
-interface Bid {
-  batteryOwner: string;
-  amountInKWh: number;
-  pricePerMWh: number;
-}
-
 // Avvio della simulazione e piazzamento delle bid
 const startBiddingProcess = (
   sessionNumber: number,
-  setBidsPlaced: React.Dispatch<React.SetStateAction<string | null>>, // Cambiato da numero a stringa
-  setBatteriesPlaced: React.Dispatch<
-    React.SetStateAction<{ [key: string]: boolean }>
-  > // Usiamo un oggetto per tracciare lo stato delle batterie piazzate
+  setBidsPlaced: React.Dispatch<React.SetStateAction<number | null>>,
+  setBatteriesPlaced: React.Dispatch<React.SetStateAction<boolean[]>>
 ) => {
   const bidsForSession =
     bidsData[`session${sessionNumber}` as keyof typeof bidsData];
@@ -42,20 +34,24 @@ const startBiddingProcess = (
     if (bidIndex < totalBids) {
       const bid = bidsForSession[bidIndex];
 
-      // Trova la batteria corrispondente all'indirizzo del proprietario della bid
-      const batteryOwnerAddress = bid.batteryOwner;
+      // Trova la batteria corrispondente al proprietario della bid
+      const batteryIndex = registeredBatteries.findIndex(
+        (battery) => battery.owner === bid.batteryOwner
+      );
 
-      // Simula la chiamata API per piazzare la bid
-      axios.post("/api/placeBid", bid).then(() => {
-        console.log("Bid placed:", bid);
+      if (batteryIndex !== -1) {
+        // Simula la chiamata API
+        axios.post("/api/placeBid", bid).then(() => {
+          console.log("Bid placed:", bid);
+          setBatteriesPlaced((prev) => {
+            const updatedBatteries = [...prev];
+            updatedBatteries[batteryIndex] = true; // Segna la batteria come "piazzata"
+            return updatedBatteries;
+          });
 
-        setBatteriesPlaced((prev) => ({
-          ...prev,
-          [batteryOwnerAddress]: true, // Segna la batteria come "piazzata" usando l'indirizzo come chiave
-        }));
-
-        setBidsPlaced(batteryOwnerAddress); // Usa l'indirizzo del proprietario come chiave per le bid piazzate
-      });
+          setBidsPlaced(batteryIndex); // Attiva la batteria su cui è stata piazzata la bid
+        });
+      }
 
       bidIndex++;
     } else {
@@ -68,12 +64,12 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
   handleOpenDialog,
 }) => {
   // Stato che tiene traccia delle batterie piazzate
-  const [batteriesPlaced, setBatteriesPlaced] = useState<{
-    [key: string]: boolean;
-  }>({});
+  const [batteriesPlaced, setBatteriesPlaced] = useState<boolean[]>(
+    Array(registeredBatteries.length).fill(false)
+  );
 
   // Stato per indicare quale batteria ha appena ricevuto una bid
-  const [bidsPlaced, setBidsPlaced] = useState<string | null>(null);
+  const [bidsPlaced, setBidsPlaced] = useState<number | null>(null);
 
   useEffect(() => {
     // Avvia il processo di piazzamento delle bid

@@ -51,17 +51,16 @@ const PreSimulationPage: React.FC<PreSimulationPageProps> = ({
     setLoading(true);
 
     try {
-      // Manda una richiesta API per ogni batteria
-      const registrationPromises = batteriesData.map((battery, idx) =>
-        axios.post("/api/registerBattery", {
+      // Ciclo sincrono per registrare ogni batteria in ordine
+      for (let idx = 0; idx < batteriesData.length; idx++) {
+        const battery = batteriesData[idx];
+
+        await axios.post("/api/registerBattery", {
           address: batteryAddresses[idx],
           capacity: battery.capacity,
           SoC: battery.SoC,
-        })
-      );
-
-      // Attendi la registrazione di tutte le batterie
-      await Promise.all(registrationPromises);
+        });
+      }
 
       setBatteriesRegistered(true); // Imposta lo stato su registrate
     } catch (error) {

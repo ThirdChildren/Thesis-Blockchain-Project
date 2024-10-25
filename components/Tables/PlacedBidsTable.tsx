@@ -18,7 +18,7 @@ interface Bid {
   txHash: string;
 }
 
-const PlacedBidTable = () => {
+const PlacedBidsTable = () => {
   const [bids, setBids] = useState<Bid[]>([]);
   const [orderBy, setOrderBy] = useState<"capacity">("capacity");
   const [orderDirection, setOrderDirection] = useState<"asc" | "desc">("asc");
@@ -77,4 +77,4 @@ const PlacedBidTable = () => {
   );
 };
 
-export default PlacedBidTable;
+export default PlacedBidsTable;
