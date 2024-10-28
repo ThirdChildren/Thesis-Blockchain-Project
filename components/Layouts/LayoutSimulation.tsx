@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import Battery from "../Battery/Battery";
 import BatteryPlaced from "../Battery/BatteryPlaced";
@@ -13,7 +15,20 @@ import bidsData from "../../db/bidsData.json";
 const startBiddingProcess = (
   sessionNumber: number,
   setBidsPlaced: React.Dispatch<React.SetStateAction<number | null>>,
-  setBatteriesPlaced: React.Dispatch<React.SetStateAction<boolean[]>>
+  setBatteriesPlaced: React.Dispatch<React.SetStateAction<boolean[]>>,
+  setCurrentBid: React.Dispatch<
+    React.SetStateAction<{
+      batteryOwner: string;
+      amountInKWh: number;
+      pricePerMWh: number;
+    } | null>
+  >,
+  showBidNotification: (
+    bidId: number,
+    batteryOwner: string,
+    amountInKWh: number,
+    pricePerMWh: number
+  ) => void
 ) => {
   const bidsForSession =
     bidsData[`session${sessionNumber}` as keyof typeof bidsData];
@@ -36,16 +51,28 @@ const startBiddingProcess = (
       );
 
       if (batteryIndex !== -1) {
-        // Simula la chiamata API
         axios.post("/api/placeBid", bid).then(() => {
           console.log("Bid placed:", bid);
           setBatteriesPlaced((prev) => {
             const updatedBatteries = [...prev];
-            updatedBatteries[batteryIndex] = true; // Segna la batteria come "piazzata"
+            updatedBatteries[batteryIndex] = true;
             return updatedBatteries;
           });
 
-          setBidsPlaced(batteryIndex); // Attiva la batteria su cui è stata piazzata la bid
+          setBidsPlaced(batteryIndex);
+          setCurrentBid({
+            batteryOwner: bid.batteryOwner,
+            amountInKWh: bid.amountInKWh,
+            pricePerMWh: bid.pricePerMWh,
+          });
+
+          // Mostra la notifica per la bid
+          showBidNotification(
+            bidIndex,
+            bid.batteryOwner,
+            bid.amountInKWh,
+            bid.pricePerMWh
+          );
         });
       }
 
@@ -68,16 +95,54 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
   isPositiveReserve,
 }) => {
   const [batteriesPlaced, setBatteriesPlaced] = useState<boolean[]>(
-    Array(20).fill(false)
+    Array(registeredBatteries.length).fill(false)
   );
   const [bidsPlaced, setBidsPlaced] = useState<number | null>(null);
+  const [currentBid, setCurrentBid] = useState<{
+    batteryOwner: string;
+    amountInKWh: number;
+    pricePerMWh: number;
+  } | null>(null); // Info bid
+
+  // Funzione per mostrare la notifica
+  const showBidNotification = (
+    bidId: number,
+    batteryOwner: string,
+    amountInKWh: number,
+    pricePerMWh: number
+  ) => {
+    toast(
+      <div>
+        <p>
+          <strong>Bid Id:</strong> {bidId}
+        </p>
+        <p>
+          <strong>Battery Owner:</strong> {batteryOwner}
+        </p>
+        <p>
+          <strong>Amount:</strong> {amountInKWh} KWh
+        </p>
+        <p>
+          <strong>Price:</strong> {pricePerMWh} €/MWh
+        </p>
+      </div>,
+      { autoClose: 4000 }
+    );
+  };
 
   useEffect(() => {
-    startBiddingProcess(1, setBidsPlaced, setBatteriesPlaced);
+    startBiddingProcess(
+      1,
+      setBidsPlaced,
+      setBatteriesPlaced,
+      setCurrentBid,
+      showBidNotification
+    );
   }, []);
 
   return (
     <div className="flex-grow flex items-center justify-center w-full">
+      <ToastContainer /> {/* Contenitore per visualizzare le notifiche */}
       <div className="grid grid-cols-2 gap-4 mr-8">
         {registeredBatteries
           .slice(0, 10)
@@ -89,7 +154,6 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
             )
           )}
       </div>
-
       <div className="flex flex-col items-center justify-center mx-8">
         <h2 className="font-bold text-lg mb-4">AGGREGATOR</h2>
         <Image
@@ -112,7 +176,6 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
           </div>
         </div>
       </div>
-
       <div className="grid grid-cols-2 gap-4 ml-8">
         {registeredBatteries
           .slice(10, 20)
