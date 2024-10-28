@@ -17,7 +17,13 @@ interface Battery {
   txHash: string;
 }
 
-const RegisteredBatteryTable = () => {
+interface RegisteredBatteryTableProps {
+  updateTable: boolean; // Aggiungi una prop per l'aggiornamento
+}
+
+const RegisteredBatteryTable: React.FC<RegisteredBatteryTableProps> = ({
+  updateTable,
+}) => {
   const [batteries, setBatteries] = useState<Battery[]>([]);
   const [orderBy, setOrderBy] = useState<"capacity">("capacity");
   const [orderDirection, setOrderDirection] = useState<"asc" | "desc">("asc");
@@ -33,7 +39,7 @@ const RegisteredBatteryTable = () => {
       }
     };
     fetchBatteries();
-  }, []);
+  }, [updateTable]); // Aggiorna i dati quando updateTable cambia
 
   // Funzione per gestire l'ordinamento
   const handleSort = () => {

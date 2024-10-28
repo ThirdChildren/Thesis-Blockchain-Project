@@ -9,10 +9,6 @@ import aggregatorImg from "../../public/aggregator-simulation.png";
 import registeredBatteries from "../../db/registeredBatteries.json";
 import bidsData from "../../db/bidsData.json";
 
-interface LayoutSimulationProps {
-  handleOpenDialog: (index: number) => void;
-}
-
 // Avvio della simulazione e piazzamento delle bid
 const startBiddingProcess = (
   sessionNumber: number,
@@ -60,28 +56,31 @@ const startBiddingProcess = (
   }, bidInterval);
 };
 
+interface LayoutSimulationProps {
+  handleOpenDialog: (index: number) => void;
+  requiredEnergy: number;
+  isPositiveReserve: boolean;
+}
+
 const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
   handleOpenDialog,
+  requiredEnergy,
+  isPositiveReserve,
 }) => {
-  // Stato che tiene traccia delle batterie piazzate
   const [batteriesPlaced, setBatteriesPlaced] = useState<boolean[]>(
-    Array(registeredBatteries.length).fill(false)
+    Array(20).fill(false)
   );
-
-  // Stato per indicare quale batteria ha appena ricevuto una bid
   const [bidsPlaced, setBidsPlaced] = useState<number | null>(null);
 
   useEffect(() => {
-    // Avvia il processo di piazzamento delle bid
     startBiddingProcess(1, setBidsPlaced, setBatteriesPlaced);
   }, []);
 
   return (
     <div className="flex-grow flex items-center justify-center w-full">
-      {/* Colonne delle batterie a sinistra dell'aggregator */}
       <div className="grid grid-cols-2 gap-4 mr-8">
         {registeredBatteries
-          .slice(0, 5)
+          .slice(0, 10)
           .map((battery, idx) =>
             batteriesPlaced[idx] ? (
               <BatteryPlaced key={idx} onClick={() => handleOpenDialog(idx)} />
@@ -89,21 +88,8 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
               <Battery key={idx} onClick={() => handleOpenDialog(idx)} />
             )
           )}
-        {registeredBatteries
-          .slice(5, 10)
-          .map((battery, idx) =>
-            batteriesPlaced[idx + 5] ? (
-              <BatteryPlaced
-                key={idx}
-                onClick={() => handleOpenDialog(idx + 5)}
-              />
-            ) : (
-              <Battery key={idx} onClick={() => handleOpenDialog(idx + 5)} />
-            )
-          )}
       </div>
 
-      {/* Sezione aggregatore centrale */}
       <div className="flex flex-col items-center justify-center mx-8">
         <h2 className="font-bold text-lg mb-4">AGGREGATOR</h2>
         <Image
@@ -111,32 +97,36 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
           alt="Aggregator"
           className="w-64 h-64 object-contain"
         />
+
+        <div className="mt-4 p-4 w-full max-w-xs bg-gray-800 rounded-lg shadow-md text-white text-center">
+          <p className="text-lg font-semibold">Market Information</p>
+          <div className="mt-2">
+            <p>
+              <span className="font-bold">Required Energy:</span>{" "}
+              {requiredEnergy} kWh
+            </p>
+            <p>
+              <span className="font-bold">Positive Reserve:</span>{" "}
+              {isPositiveReserve ? "Yes" : "No"}
+            </p>
+          </div>
+        </div>
       </div>
 
-      {/* Colonne delle batterie a destra dell'aggregator */}
       <div className="grid grid-cols-2 gap-4 ml-8">
         {registeredBatteries
-          .slice(10, 15)
+          .slice(10, 20)
           .map((battery, idx) =>
             batteriesPlaced[idx + 10] ? (
               <BatteryPlaced
-                key={idx}
+                key={idx + 10}
                 onClick={() => handleOpenDialog(idx + 10)}
               />
             ) : (
-              <Battery key={idx} onClick={() => handleOpenDialog(idx + 10)} />
-            )
-          )}
-        {registeredBatteries
-          .slice(15, 20)
-          .map((battery, idx) =>
-            batteriesPlaced[idx + 15] ? (
-              <BatteryPlaced
-                key={idx}
-                onClick={() => handleOpenDialog(idx + 15)}
+              <Battery
+                key={idx + 10}
+                onClick={() => handleOpenDialog(idx + 10)}
               />
-            ) : (
-              <Battery key={idx} onClick={() => handleOpenDialog(idx + 15)} />
             )
           )}
       </div>

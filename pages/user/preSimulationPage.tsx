@@ -7,7 +7,7 @@ import LayoutPostRegistration from "../../components/Layouts/LayoutPostRegistrat
 import batteriesData from "../../db/batteries.json";
 
 interface PreSimulationPageProps {
-  onStartSimulation: () => void; // Prop per avviare la simulazione
+  onStartSimulation: () => void;
 }
 
 const PreSimulationPage: React.FC<PreSimulationPageProps> = ({
@@ -17,9 +17,11 @@ const PreSimulationPage: React.FC<PreSimulationPageProps> = ({
   const [selectedBatteryIndex, setSelectedBatteryIndex] = useState<
     number | null
   >(null);
-  const [batteriesRegistered, setBatteriesRegistered] = useState(false); // Stato per sapere se le batterie sono state registrate
+  const [batteriesRegistered, setBatteriesRegistered] = useState(false);
   const [loading, setLoading] = useState(false);
   const [batteryAddresses, setBatteryAddresses] = useState<string[]>([]);
+  const [visibleBatteriesCount, setVisibleBatteriesCount] = useState(0); // Stato per contare le batterie visibili
+  const [updateTable, setUpdateTable] = useState(false);
 
   useEffect(() => {
     const fetchAddresses = async () => {
@@ -34,24 +36,20 @@ const PreSimulationPage: React.FC<PreSimulationPageProps> = ({
     fetchAddresses();
   }, []);
 
-  // Funzione per aprire il dialog
   const handleOpenDialog = (index: number) => {
     setSelectedBatteryIndex(index);
     setOpenDialog(true);
   };
 
-  // Funzione per chiudere il dialog
   const handleCloseDialog = () => {
     setOpenDialog(false);
     setSelectedBatteryIndex(null);
   };
 
-  // Funzione per registrare tutte le batterie
   const handleRegisterBatteries = async () => {
     setLoading(true);
-
+    setBatteriesRegistered(true);
     try {
-      // Ciclo sincrono per registrare ogni batteria in ordine
       for (let idx = 0; idx < batteriesData.length; idx++) {
         const battery = batteriesData[idx];
 
@@ -60,9 +58,16 @@ const PreSimulationPage: React.FC<PreSimulationPageProps> = ({
           capacity: battery.capacity,
           SoC: battery.SoC,
         });
-      }
 
-      setBatteriesRegistered(true); // Imposta lo stato su registrate
+        // Incrementa visibleBatteriesCount per mostrare progressivamente le batterie registrate
+        setVisibleBatteriesCount((prev) => prev + 1);
+
+        // Aggiorna lo stato per notificare RegisteredBatteryTable
+        setUpdateTable((prev) => !prev);
+
+        // Aggiungi un breve delay per permettere il rendering visivo graduale
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      }
     } catch (error) {
       console.error("Error registering batteries:", error);
     } finally {
@@ -75,10 +80,8 @@ const PreSimulationPage: React.FC<PreSimulationPageProps> = ({
       className="min-h-screen flex flex-col items-center justify-between py-8"
       style={{ textAlign: "center", marginBottom: "40px" }}
     >
-      {/* Sezione principale */}
       {!batteriesRegistered ? (
         <div>
-          {/* Pulsante "Register Batteries" */}
           <Button
             variant="contained"
             color="success"
@@ -88,12 +91,10 @@ const PreSimulationPage: React.FC<PreSimulationPageProps> = ({
           >
             {loading ? "Registering..." : "Register Batteries"}
           </Button>
-
           <LayoutPreRegistration handleOpenDialog={handleOpenDialog} />
         </div>
       ) : (
         <div>
-          {/* Pulsante "Start Simulation" */}
           <Button
             variant="contained"
             color="primary"
@@ -102,22 +103,20 @@ const PreSimulationPage: React.FC<PreSimulationPageProps> = ({
               padding: "10px 20px",
               marginBottom: "40px",
             }}
-            onClick={onStartSimulation} // Chiamata alla funzione per cambiare pagina
+            onClick={onStartSimulation}
           >
             Start Simulation
           </Button>
-
-          {/* Layout post-registrazione */}
-          <LayoutPostRegistration handleOpenDialog={handleOpenDialog} />
-
-          {/* tabella batterie registrate */}
+          <LayoutPostRegistration
+            handleOpenDialog={handleOpenDialog}
+            visibleBatteriesCount={visibleBatteriesCount}
+          />
           <div style={{ marginTop: "40px" }}>
-            <RegisteredBatteryTable />
+            <RegisteredBatteryTable updateTable={updateTable} />
           </div>
         </div>
       )}
 
-      {/* Dialog per la visualizzazione delle informazioni della batteria */}
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle>Battery Information</DialogTitle>
         <DialogContent>

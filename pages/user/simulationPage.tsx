@@ -15,20 +15,26 @@ const SimulationPage = () => {
   >(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [showTable, setShowTable] = useState(false);
-  const [simulationEnded, setSimulationEnded] = useState(false); // Nuovo stato per la fine della simulazione
-
+  const [simulationEnded, setSimulationEnded] = useState(false);
   const [acceptedBidIds, setAcceptedBidIds] = useState<number[]>([]);
   const [totalAcceptedAmount, setTotalAcceptedAmount] = useState<number>(0);
-  const [requiredEnergy, setRequiredEnergy] = useState<number>(0);
+  const [requiredEnergy, setRequiredEnergy] = useState<number>(
+    marketOptions[0].requiredEnergy
+  );
+  const [isPositiveReserve, setIsPositiveReserve] = useState<boolean>(
+    marketOptions[0].isPositiveReserve
+  );
 
   useEffect(() => {
     const fetchRequiredEnergy = async () => {
       const { data } = await axios.get("/api/getRequiredEnergy");
-      setRequiredEnergy(data.requiredEnergy);
+      if (data.requiredEnergy !== 0) {
+        setRequiredEnergy(data.requiredEnergy);
+      }
     };
     fetchRequiredEnergy();
     openMarket();
-  }, []); // Chiamata iniziale unica per openMarket
+  }, []);
 
   const handleAcceptBid = (bidId: number, amountInKWh: number) => {
     setAcceptedBidIds((prev) => [...prev, bidId]);
@@ -37,7 +43,6 @@ const SimulationPage = () => {
 
   const openMarket = async () => {
     try {
-      const { requiredEnergy, isPositiveReserve } = marketOptions[0];
       const response = await axios.post("/api/openMarket", {
         requiredEnergy,
         isPositiveReserve,
@@ -49,12 +54,11 @@ const SimulationPage = () => {
   };
 
   const handleSimulationEnd = async () => {
-    if (simulationEnded) return; // Se la simulazione è già terminata, non richiama closeMarket
-
+    if (simulationEnded) return;
     try {
       const response = await axios.post("/api/closeMarket");
       console.log("Market closed:", response.data);
-      setSimulationEnded(true); // Imposta che la simulazione è terminata
+      setSimulationEnded(true);
     } catch (error) {
       console.error("Error closing market:", error);
     }
@@ -75,19 +79,19 @@ const SimulationPage = () => {
       className="flex flex-col items-center justify-center min-h-screen"
       style={{ backgroundColor: "#2B2930" }}
     >
-      {/* Timer della simulazione */}
       <div className="w-full flex justify-center py-8">
         <SimulationClock onEnd={handleSimulationEnd} />
       </div>
 
-      {/* Layout delle batterie */}
       <div className="mt-8 w-full">
-        <LayoutSimulation handleOpenDialog={handleOpenDialog} />
+        <LayoutSimulation
+          handleOpenDialog={handleOpenDialog}
+          requiredEnergy={requiredEnergy}
+          isPositiveReserve={isPositiveReserve}
+        />
       </div>
 
-      {/* Sezione con pulsante e immagine del TSO */}
       <div className="mt-8 w-full flex px-8">
-        {/* Contenitore pulsante e tabella */}
         <div className="w-1/2 flex flex-col items-center p-4">
           <Button
             variant="contained"
@@ -109,7 +113,6 @@ const SimulationPage = () => {
           )}
         </div>
 
-        {/* Immagine del TSO */}
         <div className="w-1/2 flex justify-center items-center p-4">
           <Image
             src={tsoImg}
@@ -119,7 +122,6 @@ const SimulationPage = () => {
         </div>
       </div>
 
-      {/* Dialog per la visualizzazione delle informazioni della batteria */}
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle>Battery Information</DialogTitle>
         <DialogContent>
