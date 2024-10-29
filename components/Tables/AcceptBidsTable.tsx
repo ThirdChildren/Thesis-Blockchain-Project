@@ -72,7 +72,10 @@ const AcceptBidsTable: React.FC<AcceptBidsTableProps> = ({
         aggregatorCommission,
       });
     } catch (error) {
-      console.error("Error accepting bid:", error);
+      console.error(
+        "Error accepting bid:",
+        (error as any).response ? (error as any).response.data : error
+      );
     }
   };
 

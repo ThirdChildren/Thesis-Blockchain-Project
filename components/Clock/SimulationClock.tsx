@@ -2,31 +2,35 @@ import { useState, useEffect } from "react";
 
 interface SimulationClockProps {
   onEnd: () => void; // Callback da chiamare quando la simulazione termina
+  reset: boolean; // Proprietà per il reset del timer
 }
 
-const SimulationClock = ({ onEnd }: SimulationClockProps) => {
+const SimulationClock = ({ onEnd, reset }: SimulationClockProps) => {
   const simulationDuration = 15 * 60; // 15 minuti in secondi
   const simulationSpeed = 10; // velocità 10x
 
   const [timeRemaining, setTimeRemaining] = useState(simulationDuration);
 
   useEffect(() => {
+    if (reset) {
+      setTimeRemaining(simulationDuration); // Reset the timer to the initial duration
+    }
+  }, [reset]);
+
+  useEffect(() => {
+    if (timeRemaining === 0) {
+      onEnd(); // Chiama la callback quando il timer finisce
+      return;
+    }
+
     const interval = setInterval(() => {
-      setTimeRemaining((prevTime) => {
-        if (prevTime > 0) {
-          return prevTime - 1;
-        } else {
-          clearInterval(interval);
-          onEnd(); // Chiama la callback quando il timer finisce
-          return 0;
-        }
-      });
-    }, 1000 / simulationSpeed); // Aggiorna ogni secondo a velocità 10x
+      setTimeRemaining((prevTime) => prevTime - 1);
+    }, 1000 / simulationSpeed);
 
-    return () => clearInterval(interval); // Pulisce l'intervallo quando il componente viene smontato
-  }, [onEnd]);
+    return () => clearInterval(interval); // Cleanup the interval on unmount or when timeRemaining changes
+  }, [timeRemaining, onEnd, simulationSpeed]);
 
-  // Formattare il tempo in minuti e secondi
+  // Format time in minutes and seconds
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;

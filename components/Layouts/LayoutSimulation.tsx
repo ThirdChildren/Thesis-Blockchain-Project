@@ -11,7 +11,7 @@ import aggregatorImg from "../../public/aggregator-simulation.png";
 import registeredBatteries from "../../db/registeredBatteries.json";
 import bidsData from "../../db/bidsData.json";
 
-// Avvio della simulazione e piazzamento delle bid
+// Function to start the bidding process for the session
 const startBiddingProcess = (
   sessionNumber: number,
   setBidsPlaced: React.Dispatch<React.SetStateAction<number | null>>,
@@ -32,6 +32,8 @@ const startBiddingProcess = (
 ) => {
   const bidsForSession =
     bidsData[`session${sessionNumber}` as keyof typeof bidsData];
+  console.log("Bids for session:", bidsForSession);
+
   if (!bidsForSession) {
     console.error("No bids found for the selected session");
     return;
@@ -39,46 +41,49 @@ const startBiddingProcess = (
 
   let bidIndex = 0;
   const totalBids = bidsForSession.length;
-  const bidInterval = (15 * 60 * 1000) / (totalBids * 10); // 15 minuti a velocità 10x
+  const bidInterval = (15 * 60 * 1000) / (totalBids * 10); // 15 minutes at 10x speed
 
   const interval = setInterval(() => {
     if (bidIndex < totalBids) {
       const bid = bidsForSession[bidIndex];
-
-      // Trova la batteria corrispondente al proprietario della bid
       const batteryIndex = registeredBatteries.findIndex(
         (battery) => battery.owner === bid.batteryOwner
       );
 
       if (batteryIndex !== -1) {
-        axios.post("/api/placeBid", bid).then(() => {
-          console.log("Bid placed:", bid);
-          setBatteriesPlaced((prev) => {
-            const updatedBatteries = [...prev];
-            updatedBatteries[batteryIndex] = true;
-            return updatedBatteries;
-          });
+        axios
+          .post("/api/placeBid", bid)
+          .then(() => {
+            console.log("Bid placed:", bid);
+            setBatteriesPlaced((prev) => {
+              const updatedBatteries = [...prev];
+              updatedBatteries[batteryIndex] = true; // Mark battery as placed
+              return updatedBatteries;
+            });
 
-          setBidsPlaced(batteryIndex);
-          setCurrentBid({
-            batteryOwner: bid.batteryOwner,
-            amountInKWh: bid.amountInKWh,
-            pricePerMWh: bid.pricePerMWh,
-          });
+            setBidsPlaced(batteryIndex);
+            setCurrentBid({
+              batteryOwner: bid.batteryOwner,
+              amountInKWh: bid.amountInKWh,
+              pricePerMWh: bid.pricePerMWh,
+            });
 
-          // Mostra la notifica per la bid
-          showBidNotification(
-            bidIndex,
-            bid.batteryOwner,
-            bid.amountInKWh,
-            bid.pricePerMWh
-          );
-        });
+            // Show notification for the bid
+            showBidNotification(
+              bidIndex,
+              bid.batteryOwner,
+              bid.amountInKWh,
+              bid.pricePerMWh
+            );
+          })
+          .catch((error) => {
+            console.error("Error placing bid:", error); // Error handling for bid placement
+          });
       }
 
       bidIndex++;
     } else {
-      clearInterval(interval);
+      clearInterval(interval); // Stop the interval when all bids have been processed
     }
   }, bidInterval);
 };
@@ -87,24 +92,27 @@ interface LayoutSimulationProps {
   handleOpenDialog: (index: number) => void;
   requiredEnergy: number;
   isPositiveReserve: boolean;
+  sessionNumber: number; // Added sessionNumber as a prop
+  batteriesPlaced: boolean[]; // Accept batteriesPlaced as a prop
+  setBatteriesPlaced: React.Dispatch<React.SetStateAction<boolean[]>>;
 }
 
 const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
   handleOpenDialog,
   requiredEnergy,
   isPositiveReserve,
+  sessionNumber,
+  batteriesPlaced, // Use batteriesPlaced prop
+  setBatteriesPlaced,
 }) => {
-  const [batteriesPlaced, setBatteriesPlaced] = useState<boolean[]>(
-    Array(registeredBatteries.length).fill(false)
-  );
   const [bidsPlaced, setBidsPlaced] = useState<number | null>(null);
   const [currentBid, setCurrentBid] = useState<{
     batteryOwner: string;
     amountInKWh: number;
     pricePerMWh: number;
-  } | null>(null); // Info bid
+  } | null>(null); // Info about the current bid
 
-  // Funzione per mostrare la notifica
+  // Function to show notifications for bids
   const showBidNotification = (
     bidId: number,
     batteryOwner: string,
@@ -131,18 +139,22 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
   };
 
   useEffect(() => {
+    // Reset batteries at the start of a new session
+    setBatteriesPlaced(Array(registeredBatteries.length).fill(false));
+
+    // Start the bidding process for the current session number
     startBiddingProcess(
-      1,
+      sessionNumber + 1,
       setBidsPlaced,
       setBatteriesPlaced,
       setCurrentBid,
       showBidNotification
     );
-  }, []);
+  }, [sessionNumber, setBatteriesPlaced]); // Ensure setBatteriesPlaced is included in dependencies
 
   return (
     <div className="flex-grow flex items-center justify-center w-full">
-      <ToastContainer /> {/* Contenitore per visualizzare le notifiche */}
+      <ToastContainer /> {/* Container for displaying notifications */}
       <div className="grid grid-cols-2 gap-4 mr-8">
         {registeredBatteries
           .slice(0, 10)
@@ -161,7 +173,6 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
           alt="Aggregator"
           className="w-64 h-64 object-contain"
         />
-
         <div className="mt-4 p-4 w-full max-w-xs bg-gray-800 rounded-lg shadow-md text-white text-center">
           <p className="text-lg font-semibold">Market Information</p>
           <div className="mt-2">

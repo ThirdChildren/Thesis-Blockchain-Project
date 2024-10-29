@@ -146,6 +146,11 @@
       "batteryOwner": "0xd4B9eF83FDb34DD1BC24d419984621e0Eb953c1C",
       "amountInKWh": 179,
       "pricePerMWh": 136
+    },
+    {
+      "batteryOwner": "0x66112DaCb2db455B567DF041917ff6ae4b3680D8",
+      "amountInKWh": 150,
+      "pricePerMWh": 105
     }
   ],
   "session3": [
@@ -295,6 +300,11 @@
       "batteryOwner": "0x9cfD36771A496f4BC904b94b778fC772759B605d",
       "amountInKWh": 232,
       "pricePerMWh": 106
+    },
+    {
+      "batteryOwner": "0xd4B9eF83FDb34DD1BC24d419984621e0Eb953c1C",
+      "amountInKWh": 150,
+      "pricePerMWh": 123
     }
   ]
 }

@@ -1,1 +1,32 @@
-[]
+[
+  {
+    "batteryOwner": "0xFeEE9E7dF3D11cb102d5E629b841F69F08Db429F",
+    "batteryOwnerPayment": 21.82,
+    "aggregatorCommission": 2.42,
+    "timestamp": "2024-10-29T12:00:04.007Z"
+  },
+  {
+    "batteryOwner": "0x143e68d23369218EAEd8E072961B1A6f7f48D834",
+    "batteryOwnerPayment": 20.2,
+    "aggregatorCommission": 2.25,
+    "timestamp": "2024-10-29T12:00:27.459Z"
+  },
+  {
+    "batteryOwner": "0xbC47f13d2121E7857b539457b9FD36C090719aFF",
+    "batteryOwnerPayment": 18.94,
+    "aggregatorCommission": 2.1,
+    "timestamp": "2024-10-29T12:00:35.084Z"
+  },
+  {
+    "batteryOwner": "0xAbb887261e9b8Db0e34871D8A21AAa091dAA2068",
+    "batteryOwnerPayment": 15.8,
+    "aggregatorCommission": 1.76,
+    "timestamp": "2024-10-29T12:00:37.115Z"
+  },
+  {
+    "batteryOwner": "0x82597d369BB02DAe89937AEb0FF154939F554367",
+    "batteryOwnerPayment": 22.59,
+    "aggregatorCommission": 2.51,
+    "timestamp": "2024-10-29T12:00:54.420Z"
+  }
+]
