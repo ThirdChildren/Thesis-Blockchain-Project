@@ -64,6 +64,13 @@ const AcceptBidsTable: React.FC<AcceptBidsTableProps> = ({
         ...prev,
         { aggregatorCommission, batteryOwnerPayment },
       ]);
+
+      // Invia i dettagli di pagamento al server per salvarli nel file JSON
+      await axios.post("/api/savePaymentDetails", {
+        batteryOwner: bid.batteryOwner,
+        batteryOwnerPayment,
+        aggregatorCommission,
+      });
     } catch (error) {
       console.error("Error accepting bid:", error);
     }

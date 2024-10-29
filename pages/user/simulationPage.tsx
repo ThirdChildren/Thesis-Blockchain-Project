@@ -5,9 +5,11 @@ import axios from "axios";
 import LayoutSimulation from "../../components/Layouts/LayoutSimulation";
 import SimulationClock from "../../components/Clock/SimulationClock";
 import AcceptBidsTable from "../../components/Tables/AcceptBidsTable";
+import PaymentDetailsTable from "../../components/Tables/PaymentDetailsTable"; // Importa il nuovo componente
 import marketOptions from "../../db/marketOptions.json";
 import batteriesData from "../../db/batteries.json";
 import tsoImg from "../../public/tso.png";
+import Receipt from "../../components/Receipt/Receipt";
 
 const SimulationPage = () => {
   const [selectedBatteryIndex, setSelectedBatteryIndex] = useState<
@@ -24,6 +26,7 @@ const SimulationPage = () => {
   const [isPositiveReserve, setIsPositiveReserve] = useState<boolean>(
     marketOptions[0].isPositiveReserve
   );
+  const [showReceiptDetails, setShowReceiptDetails] = useState(false); // Nuovo stato per mostrare i dettagli del pagamento
 
   useEffect(() => {
     const fetchRequiredEnergy = async () => {
@@ -72,6 +75,14 @@ const SimulationPage = () => {
   const handleCloseDialog = () => {
     setOpenDialog(false);
     setSelectedBatteryIndex(null);
+  };
+
+  const handleReceiptClick = () => {
+    setShowReceiptDetails(true);
+  };
+
+  const handleCloseReceiptDetails = () => {
+    setShowReceiptDetails(false);
   };
 
   return (
@@ -139,6 +150,21 @@ const SimulationPage = () => {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Posizionare il componente Receipt in basso a destra */}
+      <div className="fixed bottom-4 right-4">
+        <Receipt onClick={handleReceiptClick} />
+      </div>
+
+      {/* Condizione per mostrare i dettagli dei pagamenti */}
+      {showReceiptDetails && (
+        <Dialog open={showReceiptDetails} onClose={handleCloseReceiptDetails}>
+          <DialogTitle>Payment Details</DialogTitle>
+          <DialogContent>
+            <PaymentDetailsTable />
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 };

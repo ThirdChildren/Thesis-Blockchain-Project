@@ -59,7 +59,7 @@ const RegisteredBatteryTable: React.FC<RegisteredBatteryTableProps> = ({
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Address</TableCell>
+            <TableCell>Battery Owner</TableCell>
             <TableCell>
               <TableSortLabel
                 active={true}
