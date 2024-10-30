@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Button, Dialog, DialogTitle, DialogContent } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Box,
+  Typography,
+} from "@mui/material";
 import axios from "axios";
 import RegisteredBatteryTable from "../../components/Tables/RegisteredBatteryTable";
 import LayoutPreRegistration from "../../components/Layouts/LayoutPreRegistration";
@@ -8,10 +15,14 @@ import batteriesData from "../../db/batteries.json";
 
 interface PreSimulationPageProps {
   onStartSimulation: () => void;
+  onProceedToNextStep: (step: number) => void;
+  activeStep: number;
 }
 
 const PreSimulationPage: React.FC<PreSimulationPageProps> = ({
   onStartSimulation,
+  onProceedToNextStep,
+  activeStep,
 }) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedBatteryIndex, setSelectedBatteryIndex] = useState<
@@ -20,7 +31,7 @@ const PreSimulationPage: React.FC<PreSimulationPageProps> = ({
   const [batteriesRegistered, setBatteriesRegistered] = useState(false);
   const [loading, setLoading] = useState(false);
   const [batteryAddresses, setBatteryAddresses] = useState<string[]>([]);
-  const [visibleBatteriesCount, setVisibleBatteriesCount] = useState(0); // Stato per contare le batterie visibili
+  const [visibleBatteriesCount, setVisibleBatteriesCount] = useState(0);
   const [updateTable, setUpdateTable] = useState(false);
 
   useEffect(() => {
@@ -32,7 +43,6 @@ const PreSimulationPage: React.FC<PreSimulationPageProps> = ({
         console.error("Error fetching battery addresses", error);
       }
     };
-
     fetchAddresses();
   }, []);
 
@@ -49,23 +59,17 @@ const PreSimulationPage: React.FC<PreSimulationPageProps> = ({
   const handleRegisterBatteries = async () => {
     setLoading(true);
     setBatteriesRegistered(true);
+    onProceedToNextStep(1);
     try {
       for (let idx = 0; idx < batteriesData.length; idx++) {
         const battery = batteriesData[idx];
-
         await axios.post("/api/registerBattery", {
           address: batteryAddresses[idx],
           capacity: battery.capacity,
           SoC: battery.SoC,
         });
-
-        // Incrementa visibleBatteriesCount per mostrare progressivamente le batterie registrate
         setVisibleBatteriesCount((prev) => prev + 1);
-
-        // Aggiorna lo stato per notificare RegisteredBatteryTable
         setUpdateTable((prev) => !prev);
-
-        // Aggiungi un breve delay per permettere il rendering visivo graduale
         await new Promise((resolve) => setTimeout(resolve, 500));
       }
     } catch (error) {
@@ -80,7 +84,7 @@ const PreSimulationPage: React.FC<PreSimulationPageProps> = ({
       className="min-h-screen flex flex-col items-center justify-between py-8"
       style={{ textAlign: "center", marginBottom: "40px" }}
     >
-      {!batteriesRegistered ? (
+      {activeStep === 0 && !batteriesRegistered ? (
         <div>
           <Button
             variant="contained"
@@ -111,9 +115,24 @@ const PreSimulationPage: React.FC<PreSimulationPageProps> = ({
             handleOpenDialog={handleOpenDialog}
             visibleBatteriesCount={visibleBatteriesCount}
           />
-          <div style={{ marginTop: "40px" }}>
+          <Box
+            sx={{
+              width: "80%",
+              maxHeight: 400,
+              overflowY: "auto",
+              marginTop: "20px",
+              padding: 2,
+              backgroundColor: "#f5f5f5",
+              boxShadow: 3,
+              borderRadius: 2,
+              mx: "auto",
+            }}
+          >
+            <Typography variant="h6" gutterBottom>
+              Registered Batteries
+            </Typography>
             <RegisteredBatteryTable updateTable={updateTable} />
-          </div>
+          </Box>
         </div>
       )}
 
