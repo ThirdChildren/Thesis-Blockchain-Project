@@ -82,15 +82,29 @@ const SimulationPage = () => {
     }
   };
 
+  async function resetAndStartNewSession() {
+    try {
+      // Chiama la funzione di reset dei dati e attendi il completamento
+      await axios.post("/api/resetData");
+
+      // Aggiungi un breve ritardo prima di iniziare la nuova sessione
+      setTimeout(() => {
+        startNewSession();
+      }, 2000); // Ritardo di 2 secondi
+    } catch (error) {
+      console.error("Errore durante il reset della sessione:", error);
+    }
+  }
+
   const startNewSession = async () => {
     if (isMarketOpen) {
       // If the market is open, close it first
       await handleSimulationEnd(); // Close the market
     }
     try {
-      await axios.post("/api/resetData");
-
+      console.log("Inizio nuova sessione dopo il reset dei dati");
       const newIndex = sessionIndex + 1;
+      console.log("Session Index: ", newIndex);
       setSessionIndex(newIndex);
       setAcceptedBidIds([]);
       setTotalAcceptedAmount(0);
@@ -135,7 +149,7 @@ const SimulationPage = () => {
         <Button
           variant="contained"
           color="secondary"
-          onClick={startNewSession}
+          onClick={resetAndStartNewSession}
           className="mt-4"
         >
           Start new session

@@ -1,5 +1,5 @@
 {
-  "session1": [
+  "session0": [
     {
       "batteryOwner": "0x1e6e78372ca1B30211234A3AA4B4665beB9A1A0e",
       "amountInKWh": 151,
@@ -76,7 +76,7 @@
       "pricePerMWh": 48
     }
   ],
-  "session2": [
+  "session1": [
     {
       "batteryOwner": "0x6e795C7cD88dAacE8Ef15f40AdB82a09AF9A01B3",
       "amountInKWh": 137,
@@ -153,7 +153,7 @@
       "pricePerMWh": 105
     }
   ],
-  "session3": [
+  "session2": [
     {
       "batteryOwner": "0xbC47f13d2121E7857b539457b9FD36C090719aFF",
       "amountInKWh": 181,
@@ -230,7 +230,7 @@
       "pricePerMWh": 65
     }
   ],
-  "session4": [
+  "session3": [
     {
       "batteryOwner": "0x82597d369BB02DAe89937AEb0FF154939F554367",
       "amountInKWh": 125,

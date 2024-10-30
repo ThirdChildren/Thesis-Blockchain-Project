@@ -140,17 +140,17 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
 
   useEffect(() => {
     // Reset batteries at the start of a new session
-    setBatteriesPlaced(Array(registeredBatteries.length).fill(false));
+    //setBatteriesPlaced(Array(registeredBatteries.length).fill(false));
 
     // Start the bidding process for the current session number
     startBiddingProcess(
-      sessionNumber + 1,
+      sessionNumber,
       setBidsPlaced,
       setBatteriesPlaced,
       setCurrentBid,
       showBidNotification
     );
-  }, [sessionNumber, setBatteriesPlaced]); // Ensure setBatteriesPlaced is included in dependencies
+  }, [sessionNumber]); // Ensure setBatteriesPlaced is included in dependencies
 
   return (
     <div className="flex-grow flex items-center justify-center w-full">
