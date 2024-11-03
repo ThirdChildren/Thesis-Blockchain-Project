@@ -82,6 +82,11 @@ const HomePage: React.FC = () => {
                     completed={activeStep > index}
                   />
                 )}
+                sx={{
+                  "& .MuiStepLabel-label": {
+                    color: activeStep === 2 ? "#fff" : "inherit", // Cambia colore in bianco se siamo all'ultimo step
+                  },
+                }}
               >
                 {label}
               </StepLabel>

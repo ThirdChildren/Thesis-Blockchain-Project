@@ -1,3 +1,4 @@
+import { colors } from "@mui/material";
 import { useState, useEffect } from "react";
 
 interface SimulationClockProps {
@@ -41,7 +42,9 @@ const SimulationClock = ({ onEnd, reset }: SimulationClockProps) => {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <h2 className="text-2xl font-bold mb-4">Simulation Time Remaining</h2>
+      <h2 className="text-2xl font-bold mb-4" style={{ color: "white" }}>
+        Simulation Time Remaining
+      </h2>
       <div className="text-4xl font-mono bg-gray-800 text-white px-6 py-2 rounded-lg shadow-md">
         {formatTime(timeRemaining)}
       </div>

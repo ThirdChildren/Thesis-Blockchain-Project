@@ -154,7 +154,8 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
 
   return (
     <div className="flex-grow flex items-center justify-center w-full">
-      <ToastContainer /> {/* Container for displaying notifications */}
+      {/* Container for displaying notifications */}
+      <ToastContainer position="top-left" />{" "}
       <div className="grid grid-cols-2 gap-4 mr-8">
         {registeredBatteries
           .slice(0, 10)
@@ -167,7 +168,9 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
           )}
       </div>
       <div className="flex flex-col items-center justify-center mx-8">
-        <h2 className="font-bold text-lg mb-4">AGGREGATOR</h2>
+        <h2 className="font-bold text-lg mb-4" style={{ color: "white" }}>
+          AGGREGATOR
+        </h2>
         <Image
           src={aggregatorImg}
           alt="Aggregator"

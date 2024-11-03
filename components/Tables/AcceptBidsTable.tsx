@@ -8,6 +8,7 @@ import {
   TableRow,
   Paper,
   Button,
+  Tooltip,
 } from "@mui/material";
 
 interface Bid {
@@ -38,17 +39,23 @@ const AcceptBidsTable: React.FC<AcceptBidsTableProps> = ({
   const [bids, setBids] = useState<Bid[]>([]);
   const [payments, setPayments] = useState<Payment[]>([]);
 
-  useEffect(() => {
-    const fetchBids = async () => {
+  const fetchBids = async () => {
+    try {
       const { data } = await axios.get("/api/getPlacedBids");
       const sortedBids = data.sort(
         (a: Bid, b: Bid) =>
           a.totalPrice / a.amountInKWh - b.totalPrice / b.amountInKWh
       );
       setBids(sortedBids);
-    };
+    } catch (error) {
+      console.error("Errore durante il recupero delle bid:", error);
+    }
+  };
 
-    fetchBids();
+  useEffect(() => {
+    fetchBids(); // Prima chiamata per ottenere i dati iniziali
+    const intervalId = setInterval(fetchBids, 5000); // Polling ogni 5 secondi
+    return () => clearInterval(intervalId); // Pulisce l'intervallo alla disconnessione
   }, []);
 
   const handleAcceptBid = async (bid: Bid) => {
@@ -65,43 +72,49 @@ const AcceptBidsTable: React.FC<AcceptBidsTableProps> = ({
         { aggregatorCommission, batteryOwnerPayment },
       ]);
 
-      // Invia i dettagli di pagamento al server per salvarli nel file JSON
       await axios.post("/api/savePaymentDetails", {
         batteryOwner: bid.batteryOwner,
         batteryOwnerPayment,
         aggregatorCommission,
       });
     } catch (error) {
-      console.error(
-        "Error accepting bid:",
-        (error as any).response ? (error as any).response.data : error
-      );
+      console.error("Error accepting bid:", error);
     }
   };
 
   const isEnergyFulfilled = totalAcceptedAmount >= requiredEnergy;
 
   return (
-    <Paper>
+    <Paper style={{ backgroundColor: "transparent" }}>
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Bid ID</TableCell>
-            <TableCell>Battery Owner</TableCell>
-            <TableCell>Amount (kWh)</TableCell>
-            <TableCell>Total Price ($)</TableCell>
-            <TableCell>Transaction Hash</TableCell>
-            <TableCell>Action</TableCell>
+            <TableCell style={{ color: "white" }}>Bid ID</TableCell>
+            <TableCell style={{ color: "white" }}>Battery Owner</TableCell>
+            <TableCell style={{ color: "white" }}>Amount (kWh)</TableCell>
+            <TableCell style={{ color: "white" }}>Total Price ($)</TableCell>
+            <TableCell style={{ color: "white" }}>Tx Hash</TableCell>
+            <TableCell style={{ color: "white" }}>Action</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {bids.map((bid, index) => (
             <TableRow key={index}>
-              <TableCell>{bid.bidId}</TableCell>
-              <TableCell>{bid.batteryOwner}</TableCell>
-              <TableCell>{bid.amountInKWh}</TableCell>
-              <TableCell>{bid.totalPrice}</TableCell>
-              <TableCell className="break-all">{bid.txHash}</TableCell>
+              <TableCell style={{ color: "white" }}>{bid.bidId}</TableCell>
+              <TableCell style={{ color: "white" }}>
+                <Tooltip title={bid.batteryOwner} arrow>
+                  <span>{bid.batteryOwner.slice(0, 5)}...</span>
+                </Tooltip>
+              </TableCell>
+              <TableCell style={{ color: "white" }}>
+                {bid.amountInKWh}
+              </TableCell>
+              <TableCell style={{ color: "white" }}>{bid.totalPrice}</TableCell>
+              <TableCell style={{ color: "white" }}>
+                <Tooltip title={bid.txHash} arrow>
+                  <span>{bid.txHash.slice(0, 5)}...</span>
+                </Tooltip>
+              </TableCell>
               <TableCell>
                 <Button
                   variant="contained"

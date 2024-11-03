@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { Button, Dialog, DialogTitle, DialogContent } from "@mui/material";
+import { Button, Dialog, DialogTitle, DialogContent, Box } from "@mui/material";
 import axios from "axios";
 import LayoutSimulation from "../../components/Layouts/LayoutSimulation";
 import SimulationClock from "../../components/Clock/SimulationClock";
@@ -138,63 +138,76 @@ const SimulationPage = () => {
 
   return (
     <div
-      className="flex flex-col items-center justify-center min-h-screen"
+      className="flex flex-col items-center justify-center min-h-screen p-8"
       style={{ backgroundColor: "#2B2930" }}
     >
-      <div className="w-full flex justify-center py-8">
+      {/* Clock posizionato al centro sopra gli altri elementi */}
+      <div className="flex flex-col items-center mb-4">
+        {" "}
+        {/* Aggiunto flex-col */}
         <SimulationClock onEnd={handleSimulationEnd} reset={resetTimer} />
-      </div>
-
-      {simulationEnded && (
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={resetAndStartNewSession}
-          className="mt-4"
-        >
-          Start new session
-        </Button>
-      )}
-
-      <div className="mt-8 w-full">
-        <LayoutSimulation
-          handleOpenDialog={handleOpenDialog}
-          requiredEnergy={requiredEnergy}
-          isPositiveReserve={isPositiveReserve}
-          sessionNumber={sessionIndex}
-          batteriesPlaced={batteriesPlaced} // Pass batteriesPlaced as a prop
-          setBatteriesPlaced={setBatteriesPlaced} // Pass setBatteriesPlaced to manage its state
-        />
-      </div>
-
-      <div className="mt-8 w-full flex px-8">
-        <div className="w-1/2 flex flex-col items-center p-4">
+        {simulationEnded && (
           <Button
             variant="contained"
-            color="primary"
-            onClick={() => setShowTable(!showTable)}
+            color="secondary"
+            onClick={resetAndStartNewSession}
+            className="mt-4" // Margin top per spazio tra timer e pulsante
           >
-            {showTable ? "Close Table" : "Show Bids Table"}
+            Start new session
           </Button>
+        )}
+      </div>
 
-          {showTable && (
-            <div className="mt-4 ml-12">
-              <AcceptBidsTable
-                acceptedBidIds={acceptedBidIds}
-                totalAcceptedAmount={totalAcceptedAmount}
-                requiredEnergy={requiredEnergy}
-                onAcceptBid={handleAcceptBid}
-              />
-            </div>
-          )}
+      {/* Riga con LayoutSimulation, TSO e Tabella */}
+      <div className="flex w-full justify-center">
+        <div className="w-1/3">
+          <LayoutSimulation
+            handleOpenDialog={handleOpenDialog}
+            requiredEnergy={requiredEnergy}
+            isPositiveReserve={isPositiveReserve}
+            sessionNumber={sessionIndex}
+            batteriesPlaced={batteriesPlaced}
+            setBatteriesPlaced={setBatteriesPlaced}
+          />
         </div>
 
-        <div className="w-1/2 flex justify-center items-center p-4">
+        <div className="w-1/3 flex flex-col items-center">
+          <h2 className="font-bold text-lg mb-4" style={{ color: "white" }}>
+            TSO
+          </h2>
           <Image
             src={tsoImg}
-            alt="Aggregator TSO"
-            className="max-w-full h-auto"
+            alt="TSO"
+            width={200} // Larghezza personalizzata
+            height={200} // Altezza personalizzata
+            className="mt-4"
           />
+
+          <div className="mt-4">
+            <Receipt onClick={handleReceiptClick} />
+          </div>
+        </div>
+
+        <div className="w-1/3">
+          <h2 className="font-bold text-lg mb-4" style={{ color: "white" }}>
+            TABELLA DELLE BID
+          </h2>
+          <Box
+            sx={{
+              overflowX: "auto",
+              overflowY: "scroll",
+              maxHeight: "500px",
+              maxWidth: "100%",
+              mx: "auto",
+            }}
+          >
+            <AcceptBidsTable
+              acceptedBidIds={acceptedBidIds}
+              totalAcceptedAmount={totalAcceptedAmount}
+              requiredEnergy={requiredEnergy}
+              onAcceptBid={handleAcceptBid}
+            />
+          </Box>
         </div>
       </div>
 
@@ -215,10 +228,6 @@ const SimulationPage = () => {
           )}
         </DialogContent>
       </Dialog>
-
-      <div className="fixed bottom-4 right-4">
-        <Receipt onClick={handleReceiptClick} />
-      </div>
 
       {showReceiptDetails && (
         <Dialog open={showReceiptDetails} onClose={handleCloseReceiptDetails}>
