@@ -22,11 +22,15 @@ export default async function placeBidHandler(
   if (req.method === "POST") {
     try {
       if (tsoContract && tsoContract.methods.placeBid) {
+        console.log("Placing bid for battery owner:", batteryOwner);
         const tx = await tsoContract.methods
           .placeBid(batteryOwner, amountInKWh, pricePerMWh)
           .send({ from: aggregatorAdminAccount })
           .on("receipt", async (tx) => {
             console.log(tx);
+          })
+          .on("error", (error) => {
+            console.log("error: ", error);
           });
 
         // Leggi il file JSON per ottenere l'ultimo bidId

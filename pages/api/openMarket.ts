@@ -15,6 +15,8 @@ export default async function openMarketHandler(
   if (req.method === "POST") {
     try {
       if (tsoContract && tsoContract.methods.openMarket) {
+        console.log("Opening market with positive reserve:", isPositiveReserve);
+        console.log("Required energy:", requiredEnergy);
         const tx = await tsoContract.methods
           .openMarket(requiredEnergy, isPositiveReserve)
           .send({ from: tsoAdminAccount })

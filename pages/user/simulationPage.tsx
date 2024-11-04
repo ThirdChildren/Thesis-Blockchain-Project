@@ -18,7 +18,7 @@ const SimulationPage = () => {
     number | null
   >(null);
   const [openDialog, setOpenDialog] = useState(false);
-  const [showTable, setShowTable] = useState(false);
+
   const [simulationEnded, setSimulationEnded] = useState(false);
   const [acceptedBidIds, setAcceptedBidIds] = useState<number[]>([]);
   const [totalAcceptedAmount, setTotalAcceptedAmount] = useState<number>(0);
@@ -37,7 +37,7 @@ const SimulationPage = () => {
 
   useEffect(() => {
     if (firstSession) {
-      openMarket();
+      openMarket(marketOptions[0].requiredEnergy, true);
       setFirstSession(false);
     } else {
       setRequiredEnergy(marketOptions[sessionIndex].requiredEnergy);
@@ -50,9 +50,14 @@ const SimulationPage = () => {
     setTotalAcceptedAmount((prevTotal) => prevTotal + amountInKWh);
   };
 
-  const openMarket = async () => {
+  const openMarket = async (
+    requiredEnergy: number,
+    isPositiveReserve: boolean
+  ) => {
     if (isMarketOpen) return; // Do not open if already open
     try {
+      console.log("Opening market with required energy: ", requiredEnergy);
+      console.log("Opening market with positive reserve: ", isPositiveReserve);
       const response = await axios.post("/api/openMarket", {
         requiredEnergy,
         isPositiveReserve,
@@ -105,6 +110,8 @@ const SimulationPage = () => {
       console.log("Inizio nuova sessione dopo il reset dei dati");
       const newIndex = sessionIndex + 1;
       console.log("Session Index: ", newIndex);
+      console.log("iS POSITIVE RESERVE: ", marketOptions[newIndex]);
+      setIsPositiveReserve(marketOptions[newIndex].isPositiveReserve);
       setSessionIndex(newIndex);
       setAcceptedBidIds([]);
       setTotalAcceptedAmount(0);
@@ -112,7 +119,12 @@ const SimulationPage = () => {
       setBatteriesPlaced(Array(batteriesData.length).fill(false)); // Reset batteries placed for the new session
       setResetTimer(true);
 
-      openMarket(); // Then open the new market
+      setTimeout(() => {
+        openMarket(
+          marketOptions[newIndex].requiredEnergy,
+          marketOptions[newIndex].isPositiveReserve
+        );
+      }, 2000); // Ritardo di 2 secondi
     } catch (error) {
       console.error("Error resetting data for new session:", error);
     }

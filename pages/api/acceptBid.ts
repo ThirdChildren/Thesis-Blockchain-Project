@@ -31,6 +31,9 @@ export default async function acceptBidHandler(
           .send({ from: tsoAdminAccount, value: totalPrice, gas: "3000000" })
           .on("receipt", async (tx) => {
             console.log(tx);
+          })
+          .on("error", (error) => {
+            console.log("error: ", error);
           });
 
         res.json({
