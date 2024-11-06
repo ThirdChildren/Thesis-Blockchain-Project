@@ -8,7 +8,8 @@ import AcceptBidsTable from "../../components/Tables/AcceptBidsTable";
 import PaymentDetailsTable from "../../components/Tables/PaymentDetailsTable";
 import marketOptions from "../../db/marketOptions.json";
 import batteriesData from "../../db/batteries.json";
-import tsoImg from "../../public/tso.png";
+import acceptedBids from "../../db/acceptedBids.json";
+import tsoImg from "../../public/tso-simulation.png";
 import Receipt from "../../components/Receipt/Receipt";
 
 const SimulationPage = () => {
@@ -89,15 +90,15 @@ const SimulationPage = () => {
 
   async function resetAndStartNewSession() {
     try {
-      // Chiama la funzione di reset dei dati e attendi il completamento
-      await axios.post("/api/resetData");
+      // Now reset data
+      //await axios.post("/api/resetData");
 
-      // Aggiungi un breve ritardo prima di iniziare la nuova sessione
+      // Delay before starting a new session
       setTimeout(() => {
         startNewSession();
-      }, 2000); // Ritardo di 2 secondi
+      }, 3000); // Delay of 3 seconds
     } catch (error) {
-      console.error("Errore durante il reset della sessione:", error);
+      console.error("Error during session reset:", error);
     }
   }
 
@@ -208,7 +209,6 @@ const SimulationPage = () => {
             sx={{
               overflowX: "auto",
               overflowY: "scroll",
-              maxHeight: "500px",
               maxWidth: "100%",
               mx: "auto",
             }}

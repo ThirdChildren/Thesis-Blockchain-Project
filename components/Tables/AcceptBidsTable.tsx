@@ -9,6 +9,7 @@ import {
   Paper,
   Button,
   Tooltip,
+  TableContainer,
 } from "@mui/material";
 
 interface Bid {
@@ -53,9 +54,9 @@ const AcceptBidsTable: React.FC<AcceptBidsTableProps> = ({
   };
 
   useEffect(() => {
-    fetchBids(); // Prima chiamata per ottenere i dati iniziali
-    const intervalId = setInterval(fetchBids, 5000); // Polling ogni 5 secondi
-    return () => clearInterval(intervalId); // Pulisce l'intervallo alla disconnessione
+    fetchBids();
+    const intervalId = setInterval(fetchBids, 5000);
+    return () => clearInterval(intervalId);
   }, []);
 
   const handleAcceptBid = async (bid: Bid) => {
@@ -82,53 +83,67 @@ const AcceptBidsTable: React.FC<AcceptBidsTableProps> = ({
     }
   };
 
-  const isEnergyFulfilled = totalAcceptedAmount >= requiredEnergy;
-
   return (
     <Paper style={{ backgroundColor: "transparent" }}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell style={{ color: "white" }}>Bid ID</TableCell>
-            <TableCell style={{ color: "white" }}>Battery Owner</TableCell>
-            <TableCell style={{ color: "white" }}>Amount (kWh)</TableCell>
-            <TableCell style={{ color: "white" }}>Total Price ($)</TableCell>
-            <TableCell style={{ color: "white" }}>Tx Hash</TableCell>
-            <TableCell style={{ color: "white" }}>Action</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {bids.map((bid, index) => (
-            <TableRow key={index}>
-              <TableCell style={{ color: "white" }}>{bid.bidId}</TableCell>
-              <TableCell style={{ color: "white" }}>
-                <Tooltip title={bid.batteryOwner} arrow>
-                  <span>{bid.batteryOwner.slice(0, 5)}...</span>
-                </Tooltip>
+      <TableContainer sx={{ maxHeight: 500 }}>
+        <Table stickyHeader>
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{ color: "white", backgroundColor: "#333" }}>
+                Bid ID
               </TableCell>
-              <TableCell style={{ color: "white" }}>
-                {bid.amountInKWh}
+              <TableCell sx={{ color: "white", backgroundColor: "#333" }}>
+                Battery Owner
               </TableCell>
-              <TableCell style={{ color: "white" }}>{bid.totalPrice}</TableCell>
-              <TableCell style={{ color: "white" }}>
-                <Tooltip title={bid.txHash} arrow>
-                  <span>{bid.txHash.slice(0, 5)}...</span>
-                </Tooltip>
+              <TableCell sx={{ color: "white", backgroundColor: "#333" }}>
+                Amount (kWh)
               </TableCell>
-              <TableCell>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => handleAcceptBid(bid)}
-                  disabled={acceptedBidIds.includes(bid.bidId)}
-                >
-                  {acceptedBidIds.includes(bid.bidId) ? "Accepted" : "Accept"}
-                </Button>
+              <TableCell sx={{ color: "white", backgroundColor: "#333" }}>
+                Total Price ($)
+              </TableCell>
+              <TableCell sx={{ color: "white", backgroundColor: "#333" }}>
+                Tx Hash
+              </TableCell>
+              <TableCell sx={{ color: "white", backgroundColor: "#333" }}>
+                Action
               </TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHead>
+          <TableBody>
+            {bids.map((bid, index) => (
+              <TableRow key={index}>
+                <TableCell style={{ color: "white" }}>{bid.bidId}</TableCell>
+                <TableCell style={{ color: "white" }}>
+                  <Tooltip title={bid.batteryOwner} arrow>
+                    <span>{bid.batteryOwner.slice(0, 5)}...</span>
+                  </Tooltip>
+                </TableCell>
+                <TableCell style={{ color: "white" }}>
+                  {bid.amountInKWh}
+                </TableCell>
+                <TableCell style={{ color: "white" }}>
+                  {bid.totalPrice}
+                </TableCell>
+                <TableCell style={{ color: "white" }}>
+                  <Tooltip title={bid.txHash} arrow>
+                    <span>{bid.txHash.slice(0, 5)}...</span>
+                  </Tooltip>
+                </TableCell>
+                <TableCell>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleAcceptBid(bid)}
+                    disabled={acceptedBidIds.includes(bid.bidId)}
+                  >
+                    {acceptedBidIds.includes(bid.bidId) ? "Accepted" : "Accept"}
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Paper>
   );
 };

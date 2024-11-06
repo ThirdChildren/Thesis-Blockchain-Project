@@ -8,8 +8,10 @@ import Battery from "../Battery/Battery";
 import BatteryPlaced from "../Battery/BatteryPlaced";
 
 import aggregatorImg from "../../public/aggregator-simulation.png";
-import registeredBatteries from "../../db/registeredBatteries.json";
 import bidsData from "../../db/bidsData.json";
+
+// Importiamo il JSON inizialmente
+import initialRegisteredBatteries from "../../db/registeredBatteries.json";
 
 // Function to start the bidding process for the session
 const startBiddingProcess = (
@@ -46,7 +48,7 @@ const startBiddingProcess = (
   const interval = setInterval(() => {
     if (bidIndex < totalBids) {
       const bid = bidsForSession[bidIndex];
-      const batteryIndex = registeredBatteries.findIndex(
+      const batteryIndex = initialRegisteredBatteries.findIndex(
         (battery) => battery.owner === bid.batteryOwner
       );
 
@@ -112,6 +114,21 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
     pricePerMWh: number;
   } | null>(null); // Info about the current bid
 
+  // Stato per registeredBatteries che permette l'aggiornamento dinamico
+  const [dynamicRegisteredBatteries, setDynamicRegisteredBatteries] = useState(
+    initialRegisteredBatteries
+  );
+
+  // Carica automaticamente i nuovi dati da registeredBatteries.json in tempo reale
+  useEffect(() => {
+    const fetchBatteries = async () => {
+      const response = await import("../../db/registeredBatteries.json");
+      setDynamicRegisteredBatteries(response.default);
+    };
+
+    fetchBatteries();
+  }, [sessionNumber]);
+
   // Function to show notifications for bids
   const showBidNotification = (
     bidId: number,
@@ -139,9 +156,6 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
   };
 
   useEffect(() => {
-    // Reset batteries at the start of a new session
-    //setBatteriesPlaced(Array(registeredBatteries.length).fill(false));
-
     // Start the bidding process for the current session number
     startBiddingProcess(
       sessionNumber,
@@ -157,7 +171,7 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
       {/* Container for displaying notifications */}
       <ToastContainer position="top-left" />{" "}
       <div className="grid grid-cols-2 gap-4 mr-8">
-        {registeredBatteries
+        {dynamicRegisteredBatteries
           .slice(0, 10)
           .map((battery, idx) =>
             batteriesPlaced[idx] ? (
@@ -191,7 +205,7 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
         </div>
       </div>
       <div className="grid grid-cols-2 gap-4 ml-8">
-        {registeredBatteries
+        {dynamicRegisteredBatteries
           .slice(10, 20)
           .map((battery, idx) =>
             batteriesPlaced[idx + 10] ? (

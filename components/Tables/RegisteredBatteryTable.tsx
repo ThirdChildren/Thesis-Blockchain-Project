@@ -4,6 +4,7 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TableRow,
   TableSortLabel,
@@ -18,7 +19,7 @@ interface Battery {
 }
 
 interface RegisteredBatteryTableProps {
-  updateTable: boolean; // Aggiungi una prop per l'aggiornamento
+  updateTable: boolean;
 }
 
 const RegisteredBatteryTable: React.FC<RegisteredBatteryTableProps> = ({
@@ -28,7 +29,6 @@ const RegisteredBatteryTable: React.FC<RegisteredBatteryTableProps> = ({
   const [orderBy, setOrderBy] = useState<"capacity">("capacity");
   const [orderDirection, setOrderDirection] = useState<"asc" | "desc">("asc");
 
-  // Effettua la chiamata API per ottenere le batterie registrate
   useEffect(() => {
     const fetchBatteries = async () => {
       try {
@@ -39,9 +39,8 @@ const RegisteredBatteryTable: React.FC<RegisteredBatteryTableProps> = ({
       }
     };
     fetchBatteries();
-  }, [updateTable]); // Aggiorna i dati quando updateTable cambia
+  }, [updateTable]);
 
-  // Funzione per gestire l'ordinamento
   const handleSort = () => {
     const isAsc = orderDirection === "asc";
     setOrderDirection(isAsc ? "desc" : "asc");
@@ -56,34 +55,36 @@ const RegisteredBatteryTable: React.FC<RegisteredBatteryTableProps> = ({
 
   return (
     <Paper>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Battery Owner</TableCell>
-            <TableCell>
-              <TableSortLabel
-                active={true}
-                direction={orderDirection}
-                onClick={handleSort}
-              >
-                Capacity (KWh)
-              </TableSortLabel>
-            </TableCell>
-            <TableCell>SoC (%)</TableCell>
-            <TableCell>Transaction Hash</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {batteries.map((battery, index) => (
-            <TableRow key={index}>
-              <TableCell>{battery.owner}</TableCell>
-              <TableCell>{battery.capacity}</TableCell>
-              <TableCell>{battery.soc}</TableCell>
-              <TableCell className="break-all">{battery.txHash}</TableCell>
+      <TableContainer sx={{ maxHeight: 400 }}>
+        <Table stickyHeader>
+          <TableHead>
+            <TableRow>
+              <TableCell>Battery Owner</TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={true}
+                  direction={orderDirection}
+                  onClick={handleSort}
+                >
+                  Capacity (KWh)
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>SoC (%)</TableCell>
+              <TableCell>Transaction Hash</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHead>
+          <TableBody>
+            {batteries.map((battery, index) => (
+              <TableRow key={index}>
+                <TableCell>{battery.owner}</TableCell>
+                <TableCell>{battery.capacity}</TableCell>
+                <TableCell>{battery.soc}</TableCell>
+                <TableCell className="break-all">{battery.txHash}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Paper>
   );
 };
