@@ -4,6 +4,7 @@ import Image from "next/image";
 import aggregatorImg from "../../public/aggregator.png";
 import tsoImg from "../../public/tso.png";
 import batteriesData from "../../db/batteries.json";
+import { Typography } from "@mui/material";
 
 interface LayoutPreRegistrationProps {
   handleOpenDialog: (index: number) => void;
@@ -19,12 +20,42 @@ const LayoutPreRegistration: React.FC<LayoutPreRegistrationProps> = ({
         <div className="flex flex-col space-y-4">
           <div className="grid grid-cols-2 gap-2">
             {batteriesData.slice(0, 10).map((battery, idx) => (
-              <Battery key={idx} onClick={() => handleOpenDialog(idx)} />
+              <div key={idx} className="flex flex-col items-center">
+                <Battery key={idx} onClick={() => handleOpenDialog(idx)} />
+                <Typography
+                  variant="caption"
+                  className="mt-1 text-white font-semibold"
+                  style={{
+                    color: "#83f765",
+                    backgroundColor: "#428f2f",
+                    padding: "2px 6px",
+                    borderRadius: "4px",
+                    textAlign: "center",
+                  }}
+                >
+                  Battery {idx + 1}
+                </Typography>
+              </div>
             ))}
           </div>
           <div className="grid grid-cols-2 gap-2">
             {batteriesData.slice(10, 20).map((battery, idx) => (
-              <Battery key={idx} onClick={() => handleOpenDialog(idx + 10)} />
+              <div key={idx} className="flex flex-col items-center">
+                <Battery key={idx} onClick={() => handleOpenDialog(idx + 10)} />
+                <Typography
+                  variant="caption"
+                  className="mt-1 text-white font-semibold"
+                  style={{
+                    color: "#83f765",
+                    backgroundColor: "#428f2f",
+                    padding: "2px 6px",
+                    borderRadius: "4px",
+                    textAlign: "center",
+                  }}
+                >
+                  Battery {idx + 11}
+                </Typography>
+              </div>
             ))}
           </div>
         </div>

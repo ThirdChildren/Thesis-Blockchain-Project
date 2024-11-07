@@ -3,15 +3,12 @@ import Image from "next/image";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 import Battery from "../Battery/Battery";
 import BatteryPlaced from "../Battery/BatteryPlaced";
-
 import aggregatorImg from "../../public/aggregator-simulation.png";
 import bidsData from "../../db/bidsData.json";
-
-// Importiamo il JSON inizialmente
 import initialRegisteredBatteries from "../../db/registeredBatteries.json";
+import { Typography } from "@mui/material";
 
 // Function to start the bidding process for the session
 const startBiddingProcess = (
@@ -70,9 +67,8 @@ const startBiddingProcess = (
               pricePerMWh: bid.pricePerMWh,
             });
 
-            // Show notification for the bid
             showBidNotification(
-              bidIndex,
+              bidIndex - 1,
               bid.batteryOwner,
               bid.amountInKWh,
               bid.pricePerMWh
@@ -94,8 +90,8 @@ interface LayoutSimulationProps {
   handleOpenDialog: (index: number) => void;
   requiredEnergy: number;
   isPositiveReserve: boolean;
-  sessionNumber: number; // Added sessionNumber as a prop
-  batteriesPlaced: boolean[]; // Accept batteriesPlaced as a prop
+  sessionNumber: number;
+  batteriesPlaced: boolean[];
   setBatteriesPlaced: React.Dispatch<React.SetStateAction<boolean[]>>;
 }
 
@@ -104,7 +100,7 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
   requiredEnergy,
   isPositiveReserve,
   sessionNumber,
-  batteriesPlaced, // Use batteriesPlaced prop
+  batteriesPlaced,
   setBatteriesPlaced,
 }) => {
   const [bidsPlaced, setBidsPlaced] = useState<number | null>(null);
@@ -112,14 +108,12 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
     batteryOwner: string;
     amountInKWh: number;
     pricePerMWh: number;
-  } | null>(null); // Info about the current bid
+  } | null>(null);
 
-  // Stato per registeredBatteries che permette l'aggiornamento dinamico
   const [dynamicRegisteredBatteries, setDynamicRegisteredBatteries] = useState(
     initialRegisteredBatteries
   );
 
-  // Carica automaticamente i nuovi dati da registeredBatteries.json in tempo reale
   useEffect(() => {
     const fetchBatteries = async () => {
       const response = await import("../../db/registeredBatteries.json");
@@ -129,7 +123,6 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
     fetchBatteries();
   }, [sessionNumber]);
 
-  // Function to show notifications for bids
   const showBidNotification = (
     bidId: number,
     batteryOwner: string,
@@ -156,7 +149,6 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
   };
 
   useEffect(() => {
-    // Start the bidding process for the current session number
     startBiddingProcess(
       sessionNumber,
       setBidsPlaced,
@@ -164,22 +156,34 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
       setCurrentBid,
       showBidNotification
     );
-  }, [sessionNumber]); // Ensure setBatteriesPlaced is included in dependencies
+  }, [sessionNumber]);
 
   return (
     <div className="flex-grow flex items-center justify-center w-full">
-      {/* Container for displaying notifications */}
       <ToastContainer position="top-left" />{" "}
       <div className="grid grid-cols-2 gap-4 mr-8">
-        {dynamicRegisteredBatteries
-          .slice(0, 10)
-          .map((battery, idx) =>
-            batteriesPlaced[idx] ? (
-              <BatteryPlaced key={idx} onClick={() => handleOpenDialog(idx)} />
+        {dynamicRegisteredBatteries.slice(0, 10).map((battery, idx) => (
+          <div key={idx} className="flex flex-col items-center">
+            {batteriesPlaced[idx] ? (
+              <BatteryPlaced onClick={() => handleOpenDialog(idx)} />
             ) : (
-              <Battery key={idx} onClick={() => handleOpenDialog(idx)} />
-            )
-          )}
+              <Battery onClick={() => handleOpenDialog(idx)} />
+            )}
+            <Typography
+              variant="caption"
+              className="mt-1 text-white font-semibold"
+              style={{
+                color: "#b3e5fc",
+                backgroundColor: "#263238",
+                padding: "2px 6px",
+                borderRadius: "4px",
+                textAlign: "center",
+              }}
+            >
+              Battery {idx + 1}
+            </Typography>
+          </div>
+        ))}
       </div>
       <div className="flex flex-col items-center justify-center mx-8">
         <h2 className="font-bold text-lg mb-4" style={{ color: "white" }}>
@@ -205,21 +209,28 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
         </div>
       </div>
       <div className="grid grid-cols-2 gap-4 ml-8">
-        {dynamicRegisteredBatteries
-          .slice(10, 20)
-          .map((battery, idx) =>
-            batteriesPlaced[idx + 10] ? (
-              <BatteryPlaced
-                key={idx + 10}
-                onClick={() => handleOpenDialog(idx + 10)}
-              />
+        {dynamicRegisteredBatteries.slice(10, 20).map((battery, idx) => (
+          <div key={idx + 10} className="flex flex-col items-center">
+            {batteriesPlaced[idx + 10] ? (
+              <BatteryPlaced onClick={() => handleOpenDialog(idx + 10)} />
             ) : (
-              <Battery
-                key={idx + 10}
-                onClick={() => handleOpenDialog(idx + 10)}
-              />
-            )
-          )}
+              <Battery onClick={() => handleOpenDialog(idx + 10)} />
+            )}
+            <Typography
+              variant="caption"
+              className="mt-1 text-white font-semibold"
+              style={{
+                color: "#b3e5fc",
+                backgroundColor: "#263238",
+                padding: "2px 6px",
+                borderRadius: "4px",
+                textAlign: "center",
+              }}
+            >
+              Battery {idx + 11}
+            </Typography>
+          </div>
+        ))}
       </div>
     </div>
   );
