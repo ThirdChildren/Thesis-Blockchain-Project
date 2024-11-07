@@ -3,8 +3,9 @@ import { web3, getAccounts, tsoContract } from "../../web3";
 import fs from "fs";
 import path from "path";
 
-// Percorso del file JSON per salvare le bids piazzate
-const filePath = path.join(process.cwd(), "db", "placedBids.json");
+// Paths for JSON files
+const bidsFilePath = path.join(process.cwd(), "db", "placedBids.json");
+const lastBidIdPath = path.join(process.cwd(), "db", "lastBidId.json");
 
 export default async function placeBidHandler(
   req: NextApiRequest,
@@ -23,32 +24,27 @@ export default async function placeBidHandler(
     try {
       if (tsoContract && tsoContract.methods.placeBid) {
         console.log("Placing bid for battery owner:", batteryOwner);
+
         const tx = await tsoContract.methods
           .placeBid(batteryOwner, amountInKWh, pricePerMWh)
           .send({ from: aggregatorAdminAccount })
-          .on("receipt", async (tx) => {
+          .on("receipt", (tx) => {
             console.log(tx);
           })
           .on("error", (error) => {
             console.log("error: ", error);
           });
 
-        // Leggi il file JSON per ottenere l'ultimo bidId
-        let placedBids: any[] = [];
-        let newBidId = 1; // Default bidId se il file è vuoto
-        if (fs.existsSync(filePath)) {
-          const fileData = fs.readFileSync(filePath, "utf-8");
-          placedBids = JSON.parse(fileData);
-          if (placedBids.length > 0) {
-            // Prendi l'ultimo bidId e incrementalo
-            const lastBid = placedBids[placedBids.length - 1];
-            newBidId = lastBid.bidId + 1;
-          }
+        // Retrieve the last bidId from lastBidId.json
+        let newBidId = -1;
+        if (fs.existsSync(lastBidIdPath)) {
+          const lastBidIdData = fs.readFileSync(lastBidIdPath, "utf-8");
+          newBidId = JSON.parse(lastBidIdData).lastBidId + 1;
         }
 
-        // Crea la nuova bid con un bidId incrementale
+        // Create the new bid with an incremental bidId
         const newBid = {
-          bidId: newBidId, // Aggiungi il campo bidId incrementale
+          bidId: newBidId,
           batteryOwner: batteryOwner,
           amountInKWh: amountInKWh,
           totalPrice:
@@ -56,20 +52,32 @@ export default async function placeBidHandler(
           txHash: tx.transactionHash,
         };
 
-        // Aggiungi la nuova bid all'array esistente
-        placedBids.push(newBid);
+        // Read the existing placedBids.json file
+        let placedBids = [];
+        if (fs.existsSync(bidsFilePath)) {
+          const fileData = fs.readFileSync(bidsFilePath, "utf-8");
+          placedBids = JSON.parse(fileData);
+        }
 
-        // Scrivi i dati aggiornati nel file JSON
+        // Add the new bid to the array and save to placedBids.json
+        placedBids.push(newBid);
         fs.writeFileSync(
-          filePath,
+          bidsFilePath,
           JSON.stringify(placedBids, null, 2),
+          "utf-8"
+        );
+
+        // Update the lastBidId in lastBidId.json
+        fs.writeFileSync(
+          lastBidIdPath,
+          JSON.stringify({ lastBidId: newBidId }, null, 2),
           "utf-8"
         );
 
         res.json({
           message: "Bid placed successfully",
           txHash: tx.transactionHash,
-          bidId: newBidId, // Restituisci anche il bidId
+          bidId: newBidId,
         });
       } else {
         res.status(500).json({
@@ -77,7 +85,11 @@ export default async function placeBidHandler(
         });
       }
     } catch (error) {
+      console.error(error);
       res.status(500).json({ error: (error as any).message });
     }
+  } else {
+    res.setHeader("Allow", ["POST"]);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }

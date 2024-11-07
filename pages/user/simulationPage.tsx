@@ -8,7 +8,6 @@ import AcceptBidsTable from "../../components/Tables/AcceptBidsTable";
 import PaymentDetailsTable from "../../components/Tables/PaymentDetailsTable";
 import marketOptions from "../../db/marketOptions.json";
 import batteriesData from "../../db/batteries.json";
-import acceptedBids from "../../db/acceptedBids.json";
 import tsoImg from "../../public/tso-simulation.png";
 import Receipt from "../../components/Receipt/Receipt";
 
@@ -91,7 +90,7 @@ const SimulationPage = () => {
   async function resetAndStartNewSession() {
     try {
       // Now reset data
-      //await axios.post("/api/resetData");
+      await axios.post("/api/resetData");
 
       // Delay before starting a new session
       setTimeout(() => {
