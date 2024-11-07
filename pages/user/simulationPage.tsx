@@ -110,7 +110,7 @@ const SimulationPage = () => {
       console.log("Inizio nuova sessione dopo il reset dei dati");
       const newIndex = sessionIndex + 1;
       console.log("Session Index: ", newIndex);
-      console.log("iS POSITIVE RESERVE: ", marketOptions[newIndex]);
+      //console.log("iS POSITIVE RESERVE: ", marketOptions[newIndex]);
       setIsPositiveReserve(marketOptions[newIndex].isPositiveReserve);
       setSessionIndex(newIndex);
       setAcceptedBidIds([]);
@@ -118,8 +118,10 @@ const SimulationPage = () => {
       setSimulationEnded(false);
       setBatteriesPlaced(Array(batteriesData.length).fill(false)); // Reset batteries placed for the new session
       setResetTimer(true);
+      setIsMarketOpen(false); // Set the market as closed
 
       setTimeout(() => {
+        setResetTimer(false);
         openMarket(
           marketOptions[newIndex].requiredEnergy,
           marketOptions[newIndex].isPositiveReserve

@@ -1,26 +1,29 @@
-import { colors } from "@mui/material";
 import { useState, useEffect } from "react";
 
 interface SimulationClockProps {
-  onEnd: () => void; // Callback da chiamare quando la simulazione termina
+  onEnd: () => void; // Callback per quando la simulazione termina
   reset: boolean; // Proprietà per il reset del timer
 }
 
 const SimulationClock = ({ onEnd, reset }: SimulationClockProps) => {
   const simulationDuration = 15 * 60; // 15 minuti in secondi
-  const simulationSpeed = 10; // velocità 10x
+  const simulationSpeed = 10; // Velocità 10x
 
   const [timeRemaining, setTimeRemaining] = useState(simulationDuration);
+  const [isRunning, setIsRunning] = useState(true); // Controllo per avviare o fermare il timer
 
   useEffect(() => {
     if (reset) {
-      setTimeRemaining(simulationDuration); // Reset the timer to the initial duration
+      setTimeRemaining(simulationDuration); // Resetta il timer alla durata iniziale
+      setIsRunning(true); // Riavvia il timer
     }
   }, [reset]);
 
   useEffect(() => {
-    if (timeRemaining === 0) {
-      onEnd(); // Chiama la callback quando il timer finisce
+    if (!isRunning || timeRemaining === 0) {
+      if (timeRemaining === 0) {
+        onEnd(); // Chiama la callback solo quando il timer finisce
+      }
       return;
     }
 
@@ -28,10 +31,10 @@ const SimulationClock = ({ onEnd, reset }: SimulationClockProps) => {
       setTimeRemaining((prevTime) => prevTime - 1);
     }, 1000 / simulationSpeed);
 
-    return () => clearInterval(interval); // Cleanup the interval on unmount or when timeRemaining changes
-  }, [timeRemaining, onEnd, simulationSpeed]);
+    return () => clearInterval(interval); // Cleanup dell’intervallo su unmount o cambio di tempo
+  }, [timeRemaining, isRunning, onEnd, simulationSpeed]);
 
-  // Format time in minutes and seconds
+  // Formatta il tempo in minuti e secondi
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
