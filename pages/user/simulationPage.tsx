@@ -7,7 +7,8 @@ import SimulationClock from "../../components/Clock/SimulationClock";
 import AcceptBidsTable from "../../components/Tables/AcceptBidsTable";
 import PaymentDetailsTable from "../../components/Tables/PaymentDetailsTable";
 import marketOptions from "../../db/marketOptions.json";
-import batteriesData from "../../db/batteries.json";
+import placedBids from "../../db/placedBids.json";
+import registeredBatteries from "../../db/registeredBatteries.json";
 import tsoImg from "../../public/tso-simulation.png";
 import Receipt from "../../components/Receipt/Receipt";
 
@@ -17,6 +18,13 @@ const SimulationPage = () => {
   const [selectedBatteryIndex, setSelectedBatteryIndex] = useState<
     number | null
   >(null);
+  const [selectedBatteryData, setSelectedBatteryData] = useState<{
+    owner: string;
+    soc: number;
+    capacity: number;
+  } | null>(null);
+  const [dynamicRegisteredBatteries, setDynamicRegisteredBatteries] =
+    useState(registeredBatteries);
   const [openDialog, setOpenDialog] = useState(false);
 
   const [simulationEnded, setSimulationEnded] = useState(false);
@@ -32,7 +40,7 @@ const SimulationPage = () => {
   const [resetTimer, setResetTimer] = useState(false); // To control timer reset
   const [isMarketOpen, setIsMarketOpen] = useState(false); // Track market open state
   const [batteriesPlaced, setBatteriesPlaced] = useState<boolean[]>(
-    Array(batteriesData.length).fill(false)
+    Array(registeredBatteries.length).fill(false)
   ); // Initialize the batteriesPlaced state
 
   useEffect(() => {
@@ -45,9 +53,46 @@ const SimulationPage = () => {
     }
   }, [firstSession, sessionIndex]);
 
-  const handleAcceptBid = (bidId: number, amountInKWh: number) => {
+  useEffect(() => {
+    if (selectedBatteryIndex !== null) {
+      const batteryData = dynamicRegisteredBatteries[selectedBatteryIndex];
+      if (batteryData) {
+        setSelectedBatteryData(batteryData);
+      }
+    }
+  }, [selectedBatteryIndex, dynamicRegisteredBatteries]);
+
+  const handleAcceptBid = async (bidId: number, amountInKWh: number) => {
     setAcceptedBidIds((prev) => [...prev, bidId]);
     setTotalAcceptedAmount((prevTotal) => prevTotal + amountInKWh);
+
+    // Ottieni l'indice della batteria che ha vinto la bid
+    const winningBid = placedBids.find((bid) => bid.bidId === bidId);
+
+    if (winningBid) {
+      const batteryIndex = registeredBatteries.findIndex(
+        (battery) => battery.owner === winningBid.batteryOwner
+      );
+
+      if (batteryIndex !== -1) {
+        // Chiama la funzione getSoc per aggiornare il SoC della batteria
+        try {
+          const response = await axios.get("/api/getSoc", {
+            params: { batteryOwner: winningBid.batteryOwner },
+          });
+          const newSoC = response.data.soc;
+
+          // Aggiorna il SoC della batteria
+          setDynamicRegisteredBatteries((prev) => {
+            const updatedBatteries = [...prev];
+            updatedBatteries[batteryIndex].soc = newSoC;
+            return updatedBatteries;
+          });
+        } catch (error) {
+          console.error("Errore durante l'aggiornamento del SoC:", error);
+        }
+      }
+    }
   };
 
   const openMarket = async (
@@ -109,14 +154,12 @@ const SimulationPage = () => {
     try {
       console.log("Inizio nuova sessione dopo il reset dei dati");
       const newIndex = sessionIndex + 1;
-      console.log("Session Index: ", newIndex);
-      //console.log("iS POSITIVE RESERVE: ", marketOptions[newIndex]);
       setIsPositiveReserve(marketOptions[newIndex].isPositiveReserve);
       setSessionIndex(newIndex);
       setAcceptedBidIds([]);
       setTotalAcceptedAmount(0);
       setSimulationEnded(false);
-      setBatteriesPlaced(Array(batteriesData.length).fill(false)); // Reset batteries placed for the new session
+      setBatteriesPlaced(Array(registeredBatteries.length).fill(false)); // Reset batteries placed for the new session
       setResetTimer(true);
       setIsMarketOpen(false); // Set the market as closed
 
@@ -160,7 +203,7 @@ const SimulationPage = () => {
         {" "}
         {/* Aggiunto flex-col */}
         <SimulationClock onEnd={handleSimulationEnd} reset={resetTimer} />
-        {simulationEnded && (
+        {simulationEnded && sessionIndex + 1 < marketOptions.length && (
           <Button
             variant="contained"
             color="secondary"
@@ -227,17 +270,20 @@ const SimulationPage = () => {
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle>Battery Information</DialogTitle>
         <DialogContent>
-          {selectedBatteryIndex !== null && (
+          {selectedBatteryData ? (
             <div>
               <p>
-                <strong>SoC (%):</strong>{" "}
-                {batteriesData[selectedBatteryIndex].SoC}
+                <strong>Owner:</strong> {selectedBatteryData.owner}
               </p>
               <p>
-                <strong>Capacity (KWh):</strong>{" "}
-                {batteriesData[selectedBatteryIndex].capacity}
+                <strong>SoC (%):</strong> {selectedBatteryData.soc}
+              </p>
+              <p>
+                <strong>Capacity (KWh):</strong> {selectedBatteryData.capacity}
               </p>
             </div>
+          ) : (
+            <p>No data available</p>
           )}
         </DialogContent>
       </Dialog>

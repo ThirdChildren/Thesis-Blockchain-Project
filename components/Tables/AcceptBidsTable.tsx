@@ -93,10 +93,6 @@ const AcceptBidsTable: React.FC<AcceptBidsTableProps> = ({
         batteryOwnerPayment,
         aggregatorCommission,
       });
-
-      await axios.get("api/getSoc", {
-        params: { batteryOwner: bid.batteryOwner },
-      });
     } catch (error) {
       console.error("Error accepting bid:", error);
     }
