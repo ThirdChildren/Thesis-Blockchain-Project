@@ -10,6 +10,8 @@ import {
   Button,
   Tooltip,
   TableContainer,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 
 interface Bid {
@@ -19,6 +21,7 @@ interface Bid {
   totalPrice: number;
   txHash: string;
 }
+
 interface Payment {
   aggregatorCommission: number;
   batteryOwnerPayment: number;
@@ -39,6 +42,7 @@ const AcceptBidsTable: React.FC<AcceptBidsTableProps> = ({
 }) => {
   const [bids, setBids] = useState<Bid[]>([]);
   const [payments, setPayments] = useState<Payment[]>([]);
+  const [showSnackbar, setShowSnackbar] = useState(false);
 
   const fetchBids = async () => {
     try {
@@ -59,6 +63,17 @@ const AcceptBidsTable: React.FC<AcceptBidsTableProps> = ({
     return () => clearInterval(intervalId);
   }, []);
 
+  // Mostra lo Snackbar solo una volta quando l'energia richiesta è raggiunta
+  useEffect(() => {
+    if (totalAcceptedAmount >= requiredEnergy && !showSnackbar) {
+      setShowSnackbar(true);
+    }
+  }, [totalAcceptedAmount, requiredEnergy]);
+
+  const handleCloseSnackbar = () => {
+    setShowSnackbar(false);
+  };
+
   const handleAcceptBid = async (bid: Bid) => {
     try {
       await axios.post("/api/acceptBid", { bidId: bid.bidId });
@@ -78,6 +93,10 @@ const AcceptBidsTable: React.FC<AcceptBidsTableProps> = ({
         batteryOwnerPayment,
         aggregatorCommission,
       });
+
+      await axios.get("api/getSoc", {
+        params: { batteryOwner: bid.batteryOwner },
+      });
     } catch (error) {
       console.error("Error accepting bid:", error);
     }
@@ -85,6 +104,22 @@ const AcceptBidsTable: React.FC<AcceptBidsTableProps> = ({
 
   return (
     <Paper style={{ backgroundColor: "transparent" }}>
+      <Snackbar
+        open={showSnackbar}
+        autoHideDuration={4000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Energy selected has reached the required amount of {requiredEnergy}{" "}
+          kWh!
+        </Alert>
+      </Snackbar>
+
       <TableContainer sx={{ maxHeight: 500 }}>
         <Table stickyHeader>
           <TableHead>

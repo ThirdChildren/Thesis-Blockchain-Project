@@ -4,7 +4,7 @@ import SimulationPage from "./user/simulationPage";
 import { Stepper, Step, StepLabel } from "@mui/material";
 import BatteryFullIcon from "@mui/icons-material/BatteryFull";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import BatterySaverIcon from "@mui/icons-material/BatterySaver";
 
 // Stepper icons
 const CustomStepIcon = ({
@@ -42,8 +42,8 @@ const HomePage: React.FC = () => {
 
   const icons = [
     <BatteryFullIcon style={{ fontSize: "24px" }} />,
+    <BatterySaverIcon style={{ fontSize: "24px" }} />,
     <AccessTimeIcon style={{ fontSize: "24px" }} />,
-    <AttachMoneyIcon style={{ fontSize: "24px" }} />,
   ];
 
   // Function to start simulation on the last step

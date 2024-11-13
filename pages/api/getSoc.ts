@@ -19,7 +19,7 @@ export default async function getSoc(
       const soc = await aggregatorContract.methods
         .getBatterySoC(batteryOwner)
         .call();
-      console.log(soc!.toString());
+      console.log("SOC: " + soc!.toString());
       // Restituisce il valore del SoC
       res.status(200).json({ soc: parseInt(soc!.toString()) });
     } catch (error) {

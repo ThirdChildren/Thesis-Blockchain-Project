@@ -160,7 +160,7 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
 
   return (
     <div className="flex-grow flex items-center justify-center w-full">
-      <ToastContainer position="top-left" />{" "}
+      <ToastContainer position="top-left" className="absolute top-4 left-4" />{" "}
       <div className="grid grid-cols-2 gap-4 mr-8">
         {dynamicRegisteredBatteries.slice(0, 10).map((battery, idx) => (
           <div key={idx} className="flex flex-col items-center">
