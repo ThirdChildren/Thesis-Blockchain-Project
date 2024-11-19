@@ -247,7 +247,7 @@ const SimulationPage = () => {
 
         <div className="w-1/3">
           <h2 className="font-bold text-lg mb-4" style={{ color: "white" }}>
-            TABELLA DELLE BID
+            BIDS REGISTRY
           </h2>
           <Box
             sx={{
@@ -289,7 +289,12 @@ const SimulationPage = () => {
       </Dialog>
 
       {showReceiptDetails && (
-        <Dialog open={showReceiptDetails} onClose={handleCloseReceiptDetails}>
+        <Dialog
+          open={showReceiptDetails}
+          onClose={handleCloseReceiptDetails}
+          maxWidth="md" // Puoi scegliere 'lg' o un altro valore se necessario
+          fullWidth // Espande il dialog su tutta la larghezza del contenitore
+        >
           <DialogTitle>Payment Details</DialogTitle>
           <DialogContent>
             <PaymentDetailsTable />

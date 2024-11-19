@@ -110,19 +110,6 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
     pricePerMWh: number;
   } | null>(null);
 
-  const [dynamicRegisteredBatteries, setDynamicRegisteredBatteries] = useState(
-    initialRegisteredBatteries
-  );
-
-  useEffect(() => {
-    const fetchBatteries = async () => {
-      const response = await import("../../db/registeredBatteries.json");
-      setDynamicRegisteredBatteries(response.default);
-    };
-
-    fetchBatteries();
-  }, [sessionNumber]);
-
   const showBidNotification = (
     bidId: number,
     batteryOwner: string,
@@ -162,7 +149,7 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
     <div className="flex-grow flex items-center justify-center w-full">
       <ToastContainer position="top-left" className="absolute top-4 left-4" />{" "}
       <div className="grid grid-cols-2 gap-4 mr-8">
-        {dynamicRegisteredBatteries.slice(0, 10).map((battery, idx) => (
+        {initialRegisteredBatteries.slice(0, 10).map((battery, idx) => (
           <div key={idx} className="flex flex-col items-center">
             {batteriesPlaced[idx] ? (
               <BatteryPlaced onClick={() => handleOpenDialog(idx)} />
@@ -209,7 +196,7 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
         </div>
       </div>
       <div className="grid grid-cols-2 gap-4 ml-8">
-        {dynamicRegisteredBatteries.slice(10, 20).map((battery, idx) => (
+        {initialRegisteredBatteries.slice(10, 20).map((battery, idx) => (
           <div key={idx + 10} className="flex flex-col items-center">
             {batteriesPlaced[idx + 10] ? (
               <BatteryPlaced onClick={() => handleOpenDialog(idx + 10)} />

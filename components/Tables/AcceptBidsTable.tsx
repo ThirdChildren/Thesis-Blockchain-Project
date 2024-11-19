@@ -161,14 +161,29 @@ const AcceptBidsTable: React.FC<AcceptBidsTableProps> = ({
                   </Tooltip>
                 </TableCell>
                 <TableCell>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => handleAcceptBid(bid)}
-                    disabled={acceptedBidIds.includes(bid.bidId)}
-                  >
-                    {acceptedBidIds.includes(bid.bidId) ? "Accepted" : "Accept"}
-                  </Button>
+                  {acceptedBidIds.includes(bid.bidId) ? (
+                    <div className="w-6 h-6 flex items-center justify-center">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 90 90"
+                        className="w-full h-full"
+                      >
+                        <circle cx="45" cy="45" r="45" fill="#4bae4f" />
+                        <path
+                          d="M37.899 62.038c-.529 0-1.037-.21-1.412-.584L22.599 47.606c-.782-.779-.784-2.046-.004-2.828.779-.783 2.046-.786 2.828-.004l12.424 12.389 26.68-28.566c.755-.807 2.021-.85 2.827-.096.808.754.851 2.02.097 2.827L39.36 61.403c-.37.396-.884.625-1.426.635-.012 0-.024 0-.035 0z"
+                          fill="#fff"
+                        />
+                      </svg>
+                    </div>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => handleAcceptBid(bid)}
+                    >
+                      Accept Bid
+                    </Button>
+                  )}
                 </TableCell>
               </TableRow>
             ))}

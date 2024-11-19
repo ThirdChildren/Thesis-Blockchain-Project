@@ -117,7 +117,7 @@ const PreSimulationPage: React.FC<PreSimulationPageProps> = ({
           />
           <Box
             sx={{
-              width: "80%",
+              width: "100%",
               maxHeight: 400,
               overflowY: "auto",
               marginTop: "20px",
