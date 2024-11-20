@@ -32,6 +32,7 @@ interface AcceptBidsTableProps {
   totalAcceptedAmount: number;
   requiredEnergy: number;
   onAcceptBid: (bidId: number, amountInKWh: number) => void;
+  setNewSessionState: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AcceptBidsTable: React.FC<AcceptBidsTableProps> = ({
@@ -39,6 +40,7 @@ const AcceptBidsTable: React.FC<AcceptBidsTableProps> = ({
   totalAcceptedAmount,
   requiredEnergy,
   onAcceptBid,
+  setNewSessionState,
 }) => {
   const [bids, setBids] = useState<Bid[]>([]);
   const [payments, setPayments] = useState<Payment[]>([]);
@@ -63,9 +65,11 @@ const AcceptBidsTable: React.FC<AcceptBidsTableProps> = ({
     return () => clearInterval(intervalId);
   }, []);
 
-  // Mostra lo Snackbar solo una volta quando l'energia richiesta è raggiunta
+  // Mostra lo Snackbar solo una volta quando l'energia richiesta è raggiunta, inoltre imposta il nuovo stato della sessione per il pulsante
+  // "Start New Session" per essere abilitato
   useEffect(() => {
     if (totalAcceptedAmount >= requiredEnergy && !showSnackbar) {
+      setNewSessionState(true);
       setShowSnackbar(true);
     }
   }, [totalAcceptedAmount, requiredEnergy]);
@@ -180,6 +184,7 @@ const AcceptBidsTable: React.FC<AcceptBidsTableProps> = ({
                       variant="contained"
                       color="primary"
                       onClick={() => handleAcceptBid(bid)}
+                      disabled={totalAcceptedAmount >= requiredEnergy}
                     >
                       Accept Bid
                     </Button>

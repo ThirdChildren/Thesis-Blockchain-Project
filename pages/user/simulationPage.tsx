@@ -42,6 +42,7 @@ const SimulationPage = () => {
   const [batteriesPlaced, setBatteriesPlaced] = useState<boolean[]>(
     Array(registeredBatteries.length).fill(false)
   ); // Initialize the batteriesPlaced state
+  const [newSessionState, setNewSessionState] = useState(false);
 
   useEffect(() => {
     if (firstSession) {
@@ -155,6 +156,7 @@ const SimulationPage = () => {
       console.log("Inizio nuova sessione dopo il reset dei dati");
       const newIndex = sessionIndex + 1;
       setIsPositiveReserve(marketOptions[newIndex].isPositiveReserve);
+      setNewSessionState(false);
       setSessionIndex(newIndex);
       setAcceptedBidIds([]);
       setTotalAcceptedAmount(0);
@@ -203,16 +205,18 @@ const SimulationPage = () => {
         {" "}
         {/* Aggiunto flex-col */}
         <SimulationClock onEnd={handleSimulationEnd} reset={resetTimer} />
-        {simulationEnded && sessionIndex + 1 < marketOptions.length && (
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={resetAndStartNewSession}
-            className="mt-4" // Margin top per spazio tra timer e pulsante
-          >
-            Start new session
-          </Button>
-        )}
+        {simulationEnded &&
+          newSessionState &&
+          sessionIndex + 1 < marketOptions.length && (
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={resetAndStartNewSession}
+              className="mt-4" // Margin top per spazio tra timer e pulsante
+            >
+              Start new session
+            </Button>
+          )}
       </div>
 
       {/* Riga con LayoutSimulation, TSO e Tabella */}
@@ -262,6 +266,7 @@ const SimulationPage = () => {
               totalAcceptedAmount={totalAcceptedAmount}
               requiredEnergy={requiredEnergy}
               onAcceptBid={handleAcceptBid}
+              setNewSessionState={setNewSessionState}
             />
           </Box>
         </div>

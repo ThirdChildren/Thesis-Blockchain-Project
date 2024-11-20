@@ -185,12 +185,16 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
           <p className="text-lg font-semibold">Market Information</p>
           <div className="mt-2">
             <p>
+              <span className="font-bold">Session Number:</span>{" "}
+              {sessionNumber + 1}
+            </p>
+            <p>
               <span className="font-bold">Required Energy:</span>{" "}
               {requiredEnergy} kWh
             </p>
             <p>
-              <span className="font-bold">Positive Reserve:</span>{" "}
-              {isPositiveReserve ? "Yes" : "No"}
+              <span className="font-bold">Type of reserve:</span>{" "}
+              {isPositiveReserve ? "V2G" : "G2V"}
             </p>
           </div>
         </div>
