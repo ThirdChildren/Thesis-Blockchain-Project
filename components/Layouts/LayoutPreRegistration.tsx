@@ -29,9 +29,9 @@ const LayoutPreRegistration: React.FC<LayoutPreRegistrationProps> = ({
               BatteryComponent = Battery;
             } else if (battery.SoC >= 60) {
               BatteryComponent = BatterySemiFull;
-            } else if (battery.SoC >= 40) {
+            } else if (battery.SoC >= 30) {
               BatteryComponent = BatteryHalfFull;
-            } else if (battery.SoC >= 20) {
+            } else if (battery.SoC > 0) {
               BatteryComponent = BatterySemiEmpty;
             } else {
               BatteryComponent = BatteryEmpty;
@@ -39,7 +39,10 @@ const LayoutPreRegistration: React.FC<LayoutPreRegistrationProps> = ({
 
             return (
               <div key={idx} className="flex flex-col items-center">
-                <BatteryComponent onClick={() => handleOpenDialog(idx)} />
+                <BatteryComponent
+                  key={idx}
+                  onClick={() => handleOpenDialog(idx)}
+                />
                 <Typography
                   variant="caption"
                   className="mt-1 text-white font-semibold"

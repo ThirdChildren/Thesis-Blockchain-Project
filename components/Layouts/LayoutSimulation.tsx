@@ -4,6 +4,10 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Battery from "../Battery/Battery";
+import BatterySemiFull from "../Battery/BatterySemiFull";
+import BatteryHalfFull from "../Battery/BatteryHalfFull";
+import BatterySemiEmpty from "../Battery/BatterySemiEmpty";
+import BatteryEmpty from "../Battery/BatteryEmpty";
 import BatteryPlaced from "../Battery/BatteryPlaced";
 import aggregatorImg from "../../public/aggregator-simulation.png";
 import bidsData from "../../db/bidsData.json";
@@ -93,6 +97,7 @@ interface LayoutSimulationProps {
   sessionNumber: number;
   batteriesPlaced: boolean[];
   setBatteriesPlaced: React.Dispatch<React.SetStateAction<boolean[]>>;
+  dynamicRegisteredBatteries: any[];
 }
 
 const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
@@ -102,6 +107,7 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
   sessionNumber,
   batteriesPlaced,
   setBatteriesPlaced,
+  dynamicRegisteredBatteries,
 }) => {
   const [bidsPlaced, setBidsPlaced] = useState<number | null>(null);
   const [currentBid, setCurrentBid] = useState<{
@@ -109,6 +115,20 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
     amountInKWh: number;
     pricePerMWh: number;
   } | null>(null);
+
+  const getBatteryComponent = (SoC: number) => {
+    if (SoC >= 80) {
+      return Battery;
+    } else if (SoC >= 60) {
+      return BatterySemiFull;
+    } else if (SoC >= 30) {
+      return BatteryHalfFull;
+    } else if (SoC > 0) {
+      return BatterySemiEmpty;
+    } else {
+      return BatteryEmpty;
+    }
+  };
 
   const showBidNotification = (
     bidId: number,
@@ -149,28 +169,35 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
     <div className="flex-grow flex items-center justify-center w-full">
       <ToastContainer position="top-left" className="absolute top-4 left-4" />{" "}
       <div className="grid grid-cols-2 gap-4 mr-8">
-        {initialRegisteredBatteries.slice(0, 10).map((battery, idx) => (
-          <div key={idx} className="flex flex-col items-center">
-            {batteriesPlaced[idx] ? (
-              <BatteryPlaced onClick={() => handleOpenDialog(idx)} />
-            ) : (
-              <Battery onClick={() => handleOpenDialog(idx)} />
-            )}
-            <Typography
-              variant="caption"
-              className="mt-1 text-white font-semibold"
-              style={{
-                color: "#b3e5fc",
-                backgroundColor: "#263238",
-                padding: "2px 6px",
-                borderRadius: "4px",
-                textAlign: "center",
-              }}
-            >
-              Battery {idx + 1}
-            </Typography>
-          </div>
-        ))}
+        {initialRegisteredBatteries.slice(0, 10).map((battery, idx) => {
+          const newSoc =
+            battery.soc != dynamicRegisteredBatteries[idx].soc
+              ? dynamicRegisteredBatteries[idx].soc
+              : battery.soc;
+          const BatteryComponent = getBatteryComponent(newSoc);
+          return (
+            <div key={idx} className="flex flex-col items-center">
+              {batteriesPlaced[idx] ? (
+                <BatteryPlaced onClick={() => handleOpenDialog(idx)} />
+              ) : (
+                <BatteryComponent onClick={() => handleOpenDialog(idx)} />
+              )}
+              <Typography
+                variant="caption"
+                className="mt-1 text-white font-semibold"
+                style={{
+                  color: "#b3e5fc",
+                  backgroundColor: "#263238",
+                  padding: "2px 6px",
+                  borderRadius: "4px",
+                  textAlign: "center",
+                }}
+              >
+                Battery {idx + 1}
+              </Typography>
+            </div>
+          );
+        })}
       </div>
       <div className="flex flex-col items-center justify-center mx-8">
         <h2 className="font-bold text-lg mb-4" style={{ color: "white" }}>
@@ -200,28 +227,35 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
         </div>
       </div>
       <div className="grid grid-cols-2 gap-4 ml-8">
-        {initialRegisteredBatteries.slice(10, 20).map((battery, idx) => (
-          <div key={idx + 10} className="flex flex-col items-center">
-            {batteriesPlaced[idx + 10] ? (
-              <BatteryPlaced onClick={() => handleOpenDialog(idx + 10)} />
-            ) : (
-              <Battery onClick={() => handleOpenDialog(idx + 10)} />
-            )}
-            <Typography
-              variant="caption"
-              className="mt-1 text-white font-semibold"
-              style={{
-                color: "#b3e5fc",
-                backgroundColor: "#263238",
-                padding: "2px 6px",
-                borderRadius: "4px",
-                textAlign: "center",
-              }}
-            >
-              Battery {idx + 11}
-            </Typography>
-          </div>
-        ))}
+        {initialRegisteredBatteries.slice(10, 20).map((battery, idx) => {
+          const newSoc =
+            battery.soc != dynamicRegisteredBatteries[idx + 10].soc
+              ? dynamicRegisteredBatteries[idx + 10].soc
+              : battery.soc;
+          const BatteryComponent = getBatteryComponent(newSoc);
+          return (
+            <div key={idx + 10} className="flex flex-col items-center">
+              {batteriesPlaced[idx + 10] ? (
+                <BatteryPlaced onClick={() => handleOpenDialog(idx + 10)} />
+              ) : (
+                <BatteryComponent onClick={() => handleOpenDialog(idx + 10)} />
+              )}
+              <Typography
+                variant="caption"
+                className="mt-1 text-white font-semibold"
+                style={{
+                  color: "#b3e5fc",
+                  backgroundColor: "#263238",
+                  padding: "2px 6px",
+                  borderRadius: "4px",
+                  textAlign: "center",
+                }}
+              >
+                Battery {idx + 11}
+              </Typography>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

@@ -229,6 +229,7 @@ const SimulationPage = () => {
             sessionNumber={sessionIndex}
             batteriesPlaced={batteriesPlaced}
             setBatteriesPlaced={setBatteriesPlaced}
+            dynamicRegisteredBatteries={dynamicRegisteredBatteries}
           />
         </div>
 

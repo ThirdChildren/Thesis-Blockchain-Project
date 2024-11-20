@@ -19,11 +19,17 @@ const LayoutPostRegistration: React.FC<LayoutPostRegistrationProps> = ({
   visibleBatteriesCount,
 }) => {
   const getBatteryComponent = (SoC: number) => {
-    if (SoC >= 80) return Battery;
-    if (SoC >= 60) return BatterySemiFull;
-    if (SoC >= 40) return BatteryHalfFull;
-    if (SoC >= 20) return BatterySemiEmpty;
-    return BatteryEmpty;
+    if (SoC >= 80) {
+      return Battery;
+    } else if (SoC >= 60) {
+      return BatterySemiFull;
+    } else if (SoC >= 30) {
+      return BatteryHalfFull;
+    } else if (SoC > 0) {
+      return BatterySemiEmpty;
+    } else {
+      return BatteryEmpty;
+    }
   };
 
   return (
@@ -35,7 +41,10 @@ const LayoutPostRegistration: React.FC<LayoutPostRegistrationProps> = ({
             const BatteryComponent = getBatteryComponent(battery.SoC);
             return (
               <div key={idx} className="flex flex-col items-center">
-                <BatteryComponent onClick={() => handleOpenDialog(idx)} />
+                <BatteryComponent
+                  key={idx}
+                  onClick={() => handleOpenDialog(idx)}
+                />
                 <Typography
                   variant="caption"
                   className="mt-1 text-white font-semibold"
@@ -57,8 +66,11 @@ const LayoutPostRegistration: React.FC<LayoutPostRegistrationProps> = ({
           .map((battery, idx) => {
             const BatteryComponent = getBatteryComponent(battery.SoC);
             return (
-              <div key={idx} className="flex flex-col items-center">
-                <BatteryComponent onClick={() => handleOpenDialog(idx)} />
+              <div key={idx + 5} className="flex flex-col items-center">
+                <BatteryComponent
+                  key={idx + 5}
+                  onClick={() => handleOpenDialog(idx + 5)}
+                />
                 <Typography
                   variant="caption"
                   className="mt-1 text-white font-semibold"
@@ -90,8 +102,11 @@ const LayoutPostRegistration: React.FC<LayoutPostRegistrationProps> = ({
           .map((battery, idx) => {
             const BatteryComponent = getBatteryComponent(battery.SoC);
             return (
-              <div key={idx} className="flex flex-col items-center">
-                <BatteryComponent onClick={() => handleOpenDialog(idx + 10)} />
+              <div key={idx + 10} className="flex flex-col items-center">
+                <BatteryComponent
+                  key={idx + 10}
+                  onClick={() => handleOpenDialog(idx + 10)}
+                />
                 <Typography
                   variant="caption"
                   className="mt-1 text-white font-semibold"
@@ -113,8 +128,11 @@ const LayoutPostRegistration: React.FC<LayoutPostRegistrationProps> = ({
           .map((battery, idx) => {
             const BatteryComponent = getBatteryComponent(battery.SoC);
             return (
-              <div key={idx} className="flex flex-col items-center">
-                <BatteryComponent onClick={() => handleOpenDialog(idx + 15)} />
+              <div key={idx + 15} className="flex flex-col items-center">
+                <BatteryComponent
+                  key={idx + 15}
+                  onClick={() => handleOpenDialog(idx + 15)}
+                />
                 <Typography
                   variant="caption"
                   className="mt-1 text-white font-semibold"
