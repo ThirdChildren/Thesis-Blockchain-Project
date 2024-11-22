@@ -63,7 +63,9 @@ const PreSimulationPage: React.FC<PreSimulationPageProps> = ({
     try {
       for (let idx = 0; idx < batteriesData.length; idx++) {
         const battery = batteriesData[idx];
+        let batteryId = idx + 1;
         await axios.post("/api/registerBattery", {
+          batteryId: batteryId,
           address: batteryAddresses[idx],
           capacity: battery.capacity,
           SoC: battery.SoC,

@@ -12,19 +12,22 @@ export default async function placeBidHandler(
   res: NextApiResponse
 ) {
   const {
+    batteryId,
     batteryOwner,
     amountInKWh,
     pricePerMWh,
-  }: { batteryOwner: string; amountInKWh: number; pricePerMWh: number } =
-    req.body;
+  }: {
+    batteryId: number;
+    batteryOwner: string;
+    amountInKWh: number;
+    pricePerMWh: number;
+  } = req.body;
   const accounts = getAccounts();
   const aggregatorAdminAccount = accounts["Aggregator Admin"].address;
 
   if (req.method === "POST") {
     try {
       if (tsoContract && tsoContract.methods.placeBid) {
-        console.log("Placing bid for battery owner:", batteryOwner);
-
         const tx = await tsoContract.methods
           .placeBid(batteryOwner, amountInKWh, pricePerMWh)
           .send({ from: aggregatorAdminAccount })
@@ -45,6 +48,7 @@ export default async function placeBidHandler(
         // Create the new bid with an incremental bidId
         const newBid = {
           bidId: newBidId,
+          batteryId: batteryId,
           batteryOwner: batteryOwner,
           amountInKWh: amountInKWh,
           totalPrice:

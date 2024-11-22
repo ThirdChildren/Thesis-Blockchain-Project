@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 
 interface Battery {
+  batteryId: number;
   owner: string;
   capacity: number;
   soc: number;
@@ -59,6 +60,7 @@ const RegisteredBatteryTable: React.FC<RegisteredBatteryTableProps> = ({
         <Table stickyHeader>
           <TableHead>
             <TableRow>
+              <TableCell>Battery Id</TableCell>
               <TableCell>Battery Owner</TableCell>
               <TableCell>
                 <TableSortLabel
@@ -76,6 +78,7 @@ const RegisteredBatteryTable: React.FC<RegisteredBatteryTableProps> = ({
           <TableBody>
             {batteries.map((battery, index) => (
               <TableRow key={index}>
+                <TableCell>{battery.batteryId}</TableCell>
                 <TableCell>{battery.owner}</TableCell>
                 <TableCell>{battery.capacity}</TableCell>
                 <TableCell>{battery.soc}</TableCell>

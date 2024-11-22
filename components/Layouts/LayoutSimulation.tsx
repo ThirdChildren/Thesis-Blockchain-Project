@@ -21,6 +21,7 @@ const startBiddingProcess = (
   setBatteriesPlaced: React.Dispatch<React.SetStateAction<boolean[]>>,
   setCurrentBid: React.Dispatch<
     React.SetStateAction<{
+      batteryId: number;
       batteryOwner: string;
       amountInKWh: number;
       pricePerMWh: number;
@@ -28,6 +29,7 @@ const startBiddingProcess = (
   >,
   showBidNotification: (
     bidId: number,
+    batteryId: number,
     batteryOwner: string,
     amountInKWh: number,
     pricePerMWh: number
@@ -54,10 +56,17 @@ const startBiddingProcess = (
       );
 
       if (batteryIndex !== -1) {
+        const batteryId = initialRegisteredBatteries[batteryIndex].batteryId; // Get batteryId from registered batteries
+
+        const bidWithBatteryId = {
+          ...bid,
+          batteryId, // Aggiungi batteryId alla bid
+        };
+
         axios
-          .post("/api/placeBid", bid)
+          .post("/api/placeBid", bidWithBatteryId) // Passa la bid con batteryId
           .then(() => {
-            console.log("Bid placed:", bid);
+            console.log("Bid placed:", bidWithBatteryId);
             setBatteriesPlaced((prev) => {
               const updatedBatteries = [...prev];
               updatedBatteries[batteryIndex] = true; // Mark battery as placed
@@ -66,13 +75,15 @@ const startBiddingProcess = (
 
             setBidsPlaced(batteryIndex);
             setCurrentBid({
+              batteryId,
               batteryOwner: bid.batteryOwner,
               amountInKWh: bid.amountInKWh,
               pricePerMWh: bid.pricePerMWh,
             });
 
             showBidNotification(
-              bidIndex - 1,
+              bidIndex,
+              batteryId,
               bid.batteryOwner,
               bid.amountInKWh,
               bid.pricePerMWh
@@ -111,6 +122,7 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
 }) => {
   const [bidsPlaced, setBidsPlaced] = useState<number | null>(null);
   const [currentBid, setCurrentBid] = useState<{
+    batteryId: number;
     batteryOwner: string;
     amountInKWh: number;
     pricePerMWh: number;
@@ -132,6 +144,7 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
 
   const showBidNotification = (
     bidId: number,
+    batteryId: number,
     batteryOwner: string,
     amountInKWh: number,
     pricePerMWh: number
@@ -140,6 +153,9 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
       <div>
         <p>
           <strong>Bid Id:</strong> {bidId}
+        </p>
+        <p>
+          <strong>Battery Id:</strong> {batteryId}
         </p>
         <p>
           <strong>Battery Owner:</strong> {batteryOwner}

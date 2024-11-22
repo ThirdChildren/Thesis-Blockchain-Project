@@ -45,6 +45,7 @@ export default async function acceptBidHandler(
           // Preparazione dei dettagli della bid accettata
           const acceptedBid = {
             bidId: bid.bidId,
+            batteryId: bid.batteryId,
             batteryOwner: bid.batteryOwner,
             amount: bid.amountInKWh,
             totalPrice: bid.totalPrice,
