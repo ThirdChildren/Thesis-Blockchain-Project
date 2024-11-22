@@ -10,10 +10,12 @@ export default async function savePaymentDetailsHandler(
   res: NextApiResponse
 ) {
   const {
+    batteryId,
     batteryOwner,
     batteryOwnerPayment,
     aggregatorCommission,
   }: {
+    batteryId: number;
     batteryOwner: string;
     batteryOwnerPayment: number;
     aggregatorCommission: number;
@@ -36,16 +38,39 @@ export default async function savePaymentDetailsHandler(
         aggregatorCommission.toFixed(2)
       );
 
-      // Crea un nuovo oggetto di dettagli di pagamento
-      const newPaymentDetail = {
-        batteryOwner,
-        batteryOwnerPayment: formattedBatteryOwnerPayment,
-        aggregatorCommission: formattedAggregatorCommission,
-        timestamp: new Date().toISOString(), // Aggiungi un timestamp se necessario
-      };
+      // Controlla se esiste già un elemento con lo stesso batteryId
+      const existingPaymentIndex = paymentDetails.findIndex(
+        (detail) => detail.batteryId === batteryId
+      );
 
-      // Aggiungi il nuovo dettaglio di pagamento all'array esistente
-      paymentDetails.push(newPaymentDetail);
+      if (existingPaymentIndex !== -1) {
+        // Se esiste, somma i valori
+        paymentDetails[existingPaymentIndex].batteryOwnerPayment +=
+          formattedBatteryOwnerPayment;
+        paymentDetails[existingPaymentIndex].aggregatorCommission +=
+          formattedAggregatorCommission;
+        paymentDetails[existingPaymentIndex].batteryOwnerPayment = parseFloat(
+          paymentDetails[existingPaymentIndex].batteryOwnerPayment.toFixed(2)
+        );
+        paymentDetails[existingPaymentIndex].aggregatorCommission = parseFloat(
+          paymentDetails[existingPaymentIndex].aggregatorCommission.toFixed(2)
+        );
+      } else {
+        // Crea un nuovo oggetto di dettagli di pagamento
+        const newPaymentDetail = {
+          batteryId,
+          batteryOwner,
+          batteryOwnerPayment: formattedBatteryOwnerPayment,
+          aggregatorCommission: formattedAggregatorCommission,
+          timestamp: new Date().toISOString(), // Aggiungi un timestamp se necessario
+        };
+
+        // Aggiungi il nuovo dettaglio di pagamento all'array esistente
+        paymentDetails.push(newPaymentDetail);
+      }
+
+      // Ordina i dettagli di pagamento per batteryId
+      paymentDetails.sort((a, b) => a.batteryId - b.batteryId);
 
       // Scrivi i dati aggiornati nel file JSON
       fs.writeFileSync(

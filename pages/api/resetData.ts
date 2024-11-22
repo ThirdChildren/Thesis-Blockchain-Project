@@ -28,7 +28,7 @@ const resetData = async (req: NextApiRequest, res: NextApiResponse) => {
     fs.writeFileSync(acceptedBidsPath, JSON.stringify([]));
 
     // Reset `paymentDetails.json` to an empty array or object as required
-    fs.writeFileSync(paymentDetailsPath, JSON.stringify([]));
+    //fs.writeFileSync(paymentDetailsPath, JSON.stringify([]));
 
     res.status(200).json({ message: "Data reset successfully" });
   } catch (error) {

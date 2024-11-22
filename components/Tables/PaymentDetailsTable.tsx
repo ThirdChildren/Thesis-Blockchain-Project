@@ -12,6 +12,7 @@ import {
 import axios from "axios";
 
 interface PaymentDetail {
+  batteryId: number;
   batteryOwner: string;
   batteryOwnerPayment: number;
   aggregatorCommission: number;
@@ -35,6 +36,7 @@ const PaymentDetailsTable: React.FC = () => {
       <Table>
         <TableHead>
           <TableRow>
+            <TableCell>Battery ID</TableCell>
             <TableCell>Battery Owner</TableCell>
             <TableCell>Battery Owner Payment ($)</TableCell>
             <TableCell>Aggregator Commission ($)</TableCell>
@@ -44,6 +46,7 @@ const PaymentDetailsTable: React.FC = () => {
         <TableBody>
           {paymentDetails.map((detail, index) => (
             <TableRow key={index}>
+              <TableCell>{detail.batteryId}</TableCell>
               <TableCell>{detail.batteryOwner}</TableCell>
               <TableCell>{detail.batteryOwnerPayment.toFixed(2)}</TableCell>
               <TableCell>{detail.aggregatorCommission.toFixed(2)}</TableCell>

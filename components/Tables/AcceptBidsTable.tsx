@@ -16,6 +16,7 @@ import {
 
 interface Bid {
   bidId: number;
+  batteryId: number;
   batteryOwner: string;
   amountInKWh: number;
   totalPrice: number;
@@ -93,6 +94,7 @@ const AcceptBidsTable: React.FC<AcceptBidsTableProps> = ({
       ]);
 
       await axios.post("/api/savePaymentDetails", {
+        batteryId: bid.batteryId,
         batteryOwner: bid.batteryOwner,
         batteryOwnerPayment,
         aggregatorCommission,
