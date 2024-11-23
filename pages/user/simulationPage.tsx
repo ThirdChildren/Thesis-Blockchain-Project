@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import Image from "next/image";
 import { Button, Dialog, DialogTitle, DialogContent, Box } from "@mui/material";
 import axios from "axios";
@@ -102,8 +103,8 @@ const SimulationPage = () => {
   ) => {
     if (isMarketOpen) return; // Do not open if already open
     try {
-      console.log("Opening market with required energy: ", requiredEnergy);
-      console.log("Opening market with positive reserve: ", isPositiveReserve);
+      /*  console.log("Opening market with required energy: ", requiredEnergy);
+      console.log("Opening market with positive reserve: ", isPositiveReserve); */
       const response = await axios.post("/api/openMarket", {
         requiredEnergy,
         isPositiveReserve,
@@ -217,6 +218,15 @@ const SimulationPage = () => {
               Start new session
             </Button>
           )}
+        {simulationEnded &&
+          newSessionState &&
+          sessionIndex + 1 == marketOptions.length && (
+            <Link href="/FinalResultsPage" passHref>
+              <Button variant="contained" color="primary" className="mt-4">
+                Go to final results
+              </Button>
+            </Link>
+          )}
       </div>
 
       {/* Riga con LayoutSimulation, TSO e Tabella */}
@@ -266,6 +276,7 @@ const SimulationPage = () => {
               acceptedBidIds={acceptedBidIds}
               totalAcceptedAmount={totalAcceptedAmount}
               requiredEnergy={requiredEnergy}
+              isPositiveReserve={isPositiveReserve}
               onAcceptBid={handleAcceptBid}
               setNewSessionState={setNewSessionState}
             />

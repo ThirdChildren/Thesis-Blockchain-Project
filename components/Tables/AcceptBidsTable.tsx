@@ -32,6 +32,7 @@ interface AcceptBidsTableProps {
   acceptedBidIds: number[];
   totalAcceptedAmount: number;
   requiredEnergy: number;
+  isPositiveReserve: boolean;
   onAcceptBid: (bidId: number, amountInKWh: number) => void;
   setNewSessionState: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -40,6 +41,7 @@ const AcceptBidsTable: React.FC<AcceptBidsTableProps> = ({
   acceptedBidIds,
   totalAcceptedAmount,
   requiredEnergy,
+  isPositiveReserve,
   onAcceptBid,
   setNewSessionState,
 }) => {
@@ -70,8 +72,20 @@ const AcceptBidsTable: React.FC<AcceptBidsTableProps> = ({
   // "Start New Session" per essere abilitato
   useEffect(() => {
     if (totalAcceptedAmount >= requiredEnergy && !showSnackbar) {
-      setNewSessionState(true);
-      setShowSnackbar(true);
+      const reserveType = isPositiveReserve
+        ? "PositiveReserve"
+        : "NegativeReserve";
+      console.log("reserveType", reserveType);
+
+      axios
+        .post("/api/saveAcceptedBids", { reserveType })
+        .then(() => {
+          setNewSessionState(true);
+          setShowSnackbar(true);
+        })
+        .catch((error) => {
+          console.error("Error saving accepted bids:", error);
+        });
     }
   }, [totalAcceptedAmount, requiredEnergy]);
 
