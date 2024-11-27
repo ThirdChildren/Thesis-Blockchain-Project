@@ -54,7 +54,7 @@ const LayoutPreRegistration: React.FC<LayoutPreRegistrationProps> = ({
                     textAlign: "center",
                   }}
                 >
-                  Battery {idx + 1}
+                  Battery {idx + 1} <br />({battery.SoC}%)
                 </Typography>
               </div>
             );
@@ -77,7 +77,7 @@ const LayoutPreRegistration: React.FC<LayoutPreRegistrationProps> = ({
           <Image
             src={energyGridImg}
             alt="TSO"
-            className="w-64 h-64 object-contain"
+            className="w-96 h-64 object-contain"
           />
         </div>
       </div>

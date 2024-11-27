@@ -11,6 +11,7 @@ import marketOptions from "../../db/marketOptions.json";
 import placedBids from "../../db/placedBids.json";
 import registeredBatteries from "../../db/registeredBatteries.json";
 import tsoImg from "../../public/tso-simulation.png";
+import smartGridImg from "../../public/smartgrid.png";
 import Receipt from "../../components/Receipt/Receipt";
 
 const SimulationPage = () => {
@@ -245,17 +246,11 @@ const SimulationPage = () => {
 
         <div className="w-1/3 flex flex-col items-center">
           <h2 className="font-bold text-lg mb-4" style={{ color: "white" }}>
-            TSO
+            Power Grid
           </h2>
-          <Image
-            src={tsoImg}
-            alt="TSO"
-            width={200} // Larghezza personalizzata
-            height={200} // Altezza personalizzata
-            className="mt-4"
-          />
+          <Image src={smartGridImg} alt="TSO" className="w-96 h-64 mt-4 " />
 
-          <div className="mt-4">
+          <div>
             <Receipt onClick={handleReceiptClick} />
           </div>
         </div>

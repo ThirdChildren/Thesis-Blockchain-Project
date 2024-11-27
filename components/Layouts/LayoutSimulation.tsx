@@ -209,7 +209,7 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
                   textAlign: "center",
                 }}
               >
-                Battery {idx + 1}
+                Battery {idx + 1} ({newSoc}%)
               </Typography>
             </div>
           );
@@ -267,7 +267,7 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
                   textAlign: "center",
                 }}
               >
-                Battery {idx + 11}
+                Battery {idx + 11} ({newSoc}%)
               </Typography>
             </div>
           );

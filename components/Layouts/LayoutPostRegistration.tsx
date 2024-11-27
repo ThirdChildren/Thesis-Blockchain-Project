@@ -56,7 +56,7 @@ const LayoutPostRegistration: React.FC<LayoutPostRegistrationProps> = ({
                     textAlign: "center",
                   }}
                 >
-                  Battery {idx + 1}
+                  Battery {idx + 1} <br /> ({battery.SoC}%)
                 </Typography>
               </div>
             );
@@ -82,7 +82,7 @@ const LayoutPostRegistration: React.FC<LayoutPostRegistrationProps> = ({
                     textAlign: "center",
                   }}
                 >
-                  Battery {idx + 6}
+                  Battery {idx + 6} <br /> ({battery.SoC}%)
                 </Typography>
               </div>
             );
@@ -118,7 +118,7 @@ const LayoutPostRegistration: React.FC<LayoutPostRegistrationProps> = ({
                     textAlign: "center",
                   }}
                 >
-                  Battery {idx + 11}
+                  Battery {idx + 11} <br /> ({battery.SoC}%)
                 </Typography>
               </div>
             );
@@ -144,7 +144,7 @@ const LayoutPostRegistration: React.FC<LayoutPostRegistrationProps> = ({
                     textAlign: "center",
                   }}
                 >
-                  Battery {idx + 16}
+                  Battery {idx + 16} <br /> ({battery.SoC}%)
                 </Typography>
               </div>
             );
