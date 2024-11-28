@@ -193,23 +193,20 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
           const BatteryComponent = getBatteryComponent(newSoc);
           return (
             <div key={idx} className="flex flex-col items-center">
-              {batteriesPlaced[idx] ? (
-                <BatteryPlaced onClick={() => handleOpenDialog(idx)} />
-              ) : (
+              <div
+                className={`rounded-lg ${
+                  batteriesPlaced[idx]
+                    ? "outline outline-4 outline-blue-500"
+                    : ""
+                }`}
+              >
                 <BatteryComponent onClick={() => handleOpenDialog(idx)} />
-              )}
+              </div>
               <Typography
                 variant="caption"
-                className="mt-1 text-white font-semibold"
-                style={{
-                  color: "#b3e5fc",
-                  backgroundColor: "#263238",
-                  padding: "2px 6px",
-                  borderRadius: "4px",
-                  textAlign: "center",
-                }}
+                className="mt-1 text-white font-semibold bg-gray-800 px-2 py-1 rounded text-center max-w-[100px] line-clamp-2"
               >
-                Battery {idx + 1} ({newSoc}%)
+                B{idx + 1} ({newSoc}%)
               </Typography>
             </div>
           );
@@ -251,23 +248,20 @@ const LayoutSimulation: React.FC<LayoutSimulationProps> = ({
           const BatteryComponent = getBatteryComponent(newSoc);
           return (
             <div key={idx + 10} className="flex flex-col items-center">
-              {batteriesPlaced[idx + 10] ? (
-                <BatteryPlaced onClick={() => handleOpenDialog(idx + 10)} />
-              ) : (
+              <div
+                className={`rounded-lg ${
+                  batteriesPlaced[idx + 10]
+                    ? "outline outline-4 outline-blue-500"
+                    : ""
+                }`}
+              >
                 <BatteryComponent onClick={() => handleOpenDialog(idx + 10)} />
-              )}
+              </div>
               <Typography
                 variant="caption"
-                className="mt-1 text-white font-semibold"
-                style={{
-                  color: "#b3e5fc",
-                  backgroundColor: "#263238",
-                  padding: "2px 6px",
-                  borderRadius: "4px",
-                  textAlign: "center",
-                }}
+                className="mt-1 text-white font-semibold bg-gray-800 px-2 py-1 rounded text-center max-w-[100px] line-clamp-2"
               >
-                Battery {idx + 11} ({newSoc}%)
+                B{idx + 11} ({newSoc}%)
               </Typography>
             </div>
           );

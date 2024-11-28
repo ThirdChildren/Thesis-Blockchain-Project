@@ -1,5 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { Bar } from "react-chartjs-2";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Button,
+  IconButton,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -22,9 +30,15 @@ ChartJS.register(
   Legend
 );
 
+interface FinalResultsModalProps {
+  open: boolean;
+  onClose: () => void;
+}
+
 // Funzione per aggregare gli `amount` per batteryId
 const aggregateAmounts = (bids: any) => {
   const aggregated: { [key: string]: number } = {};
+  if (!bids) return aggregated; // Restituisce un oggetto vuoto se `bids` è undefined
   bids.forEach((bid: any) => {
     const { batteryId, amount } = bid;
     if (!aggregated[batteryId]) {
@@ -36,8 +50,12 @@ const aggregateAmounts = (bids: any) => {
 };
 
 // Aggregazione dati riserve
-const positiveReserve = aggregateAmounts(savedAcceptedBids.PositiveReserve);
-const negativeReserve = aggregateAmounts(savedAcceptedBids.NegativeReserve);
+const positiveReserve = aggregateAmounts(
+  savedAcceptedBids?.PositiveReserve || []
+);
+const negativeReserve = aggregateAmounts(
+  savedAcceptedBids?.NegativeReserve || []
+);
 
 // Batterie e energia totale
 const allBatteries = Array.from(
@@ -102,47 +120,66 @@ const chartOptions = {
   },
 };
 
-const FinalResultPage: React.FC = () => {
+const FinalResultsModal: React.FC<FinalResultsModalProps> = ({
+  open,
+  onClose,
+}) => {
+  if (!savedAcceptedBids || !paymentDetails) {
+    return (
+      <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
+        <DialogTitle>Final Simulation Results</DialogTitle>
+        <DialogContent>
+          <p>Loading data...</p>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold text-center mb-6">
+    <Dialog open={open} onClose={onClose} maxWidth="xl" fullWidth>
+      <DialogTitle className="flex justify-between items-center">
         Final Simulation Results
-      </h1>
-      <div className="flex justify-between">
-        <div className="w-1/2 pr-4">
-          <Bar
-            data={earningsData}
-            options={{
-              ...chartOptions,
-              plugins: {
-                ...chartOptions.plugins,
-                title: {
-                  display: true,
-                  text: "Earnings Distribution by Battery and Aggregator",
+        <IconButton onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
+      <DialogContent className="p-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <Bar
+              data={earningsData}
+              options={{
+                ...chartOptions,
+                plugins: {
+                  ...chartOptions.plugins,
+                  title: {
+                    display: true,
+                    text: "Earnings Distribution by Battery and Aggregator",
+                  },
                 },
-              },
-            }}
-          />
-        </div>
-        <div className="w-1/2 pl-4">
-          <Bar
-            data={energyData}
-            options={{
-              ...chartOptions,
-              plugins: {
-                ...chartOptions.plugins,
-                title: {
-                  display: true,
-                  text: "Batteries Supplied & Received Energy",
+              }}
+            />
+          </div>
+          <div>
+            <Bar
+              data={energyData}
+              options={{
+                ...chartOptions,
+                plugins: {
+                  ...chartOptions.plugins,
+                  title: {
+                    display: true,
+                    text: "Batteries Supplied & Received Energy",
+                  },
                 },
-              },
-              scales: { y: { beginAtZero: false, ticks: { stepSize: 50 } } },
-            }}
-          />
+                scales: { y: { beginAtZero: false, ticks: { stepSize: 50 } } },
+              }}
+            />
+          </div>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 
-export default FinalResultPage;
+export default FinalResultsModal;

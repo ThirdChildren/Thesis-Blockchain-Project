@@ -13,6 +13,7 @@ import registeredBatteries from "../../db/registeredBatteries.json";
 import tsoImg from "../../public/tso-simulation.png";
 import smartGridImg from "../../public/smartgrid.png";
 import Receipt from "../../components/Receipt/Receipt";
+import FinalResultsModal from "../../components/FinalResultsModal";
 
 const SimulationPage = () => {
   const [sessionIndex, setSessionIndex] = useState(0);
@@ -45,6 +46,7 @@ const SimulationPage = () => {
     Array(registeredBatteries.length).fill(false)
   ); // Initialize the batteriesPlaced state
   const [newSessionState, setNewSessionState] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     if (firstSession) {
@@ -222,11 +224,22 @@ const SimulationPage = () => {
         {simulationEnded &&
           newSessionState &&
           sessionIndex + 1 == marketOptions.length && (
-            <Link href="/FinalResultsPage" passHref>
-              <Button variant="contained" color="primary" className="mt-4">
-                Go to final results
+            <>
+              <Button
+                variant="contained"
+                color="primary"
+                className="mt-4"
+                onClick={() => setModalOpen(true)} // Apre il modal
+              >
+                See summary graphs
               </Button>
-            </Link>
+
+              {/* Modal */}
+              <FinalResultsModal
+                open={modalOpen}
+                onClose={() => setModalOpen(false)}
+              />
+            </>
           )}
       </div>
 
