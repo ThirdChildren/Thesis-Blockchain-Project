@@ -1,0 +1,6 @@
+[
+  { "requiredEnergy": 800, "isPositiveReserve": true },
+  { "requiredEnergy": 1200, "isPositiveReserve": false },
+  { "requiredEnergy": 1500, "isPositiveReserve": true },
+  { "requiredEnergy": 1300, "isPositiveReserve": false }
+]
